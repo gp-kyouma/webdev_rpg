@@ -1,77 +1,98 @@
 import { useState } from 'react';
 
-function TextField({ placeholder, data, setData }) {
-
-    const handleChange = (e) => {
-        setData(e.target.value);
-    };
-
+function NewCharForm() {
     return (
-        <input type="text" placeholder={placeholder} value={data} onChange={handleChange} />
+        <>
+        <label>
+            Character name: <input name="name" />
+        </label>
+        <hr />
+
+        <p>
+            Class:
+            <label><input type="radio" name="class" value="warrior" defaultChecked={true} /> Warrior</label>
+            <label><input type="radio" name="class" value="magician" /> Magician</label>
+            <label><input type="radio" name="class" value="archer" /> Archer</label>
+        </p>
+        <hr />
+
+        <button type="reset">Reset Character Data</button>
+        <br/>
+        </>
     );
 }
 
-function PasswordField({ placeholder, data, setData }) {
+function LoginForm({setData, startGame, newGame}) {
 
-    const handleChange = (e) => {
-        setData(e.target.value);
-    };
+    function handleSubmit(e) {
+        // Prevent the browser from reloading the page
+        e.preventDefault();
 
-    return (
-        <input type="password" placeholder={placeholder} value={data} onChange={handleChange} />
-    );
-}
+        // Read the form data
+        const formData = new FormData(e.target);
 
-//new char fields...
+        // work with it as a plain object:
+        const formJson = Object.fromEntries(formData.entries());
 
-export default function StartScreen({ confirm, setStartData }) {
-
-    const [newGame, isNewGame] = useState(false);
-
-    const [loginData,       setLoginData]       = useState("");
-    const [passwordData,    setPasswordData]    = useState("");
-
-    let newCharInput = null;
-    if (newGame){
-        newCharInput = <p>{passwordData} placeholder gaming</p>
+        setData(formJson)
+        startGame()
     }
 
-    function handleStart() {
-        //check data check if login exists etc
-        setStartData(loginData)
-        confirm(true)
+    let confirmText = "Load Character and Start Game"
+    let charForm = null
+    if (newGame){
+        confirmText = "Create Character and Start Game"
+        charForm = <NewCharForm/>
     }
 
     return (
         <>
-        <h2>title?</h2>
-
-        <button type="button" onClick={() => isNewGame(true)} >
-            New Game
-        </button>
-
-        <button type="button" onClick={() => isNewGame(false)} >
-            Load Game
-        </button>
-
-        <br></br>
-        <br></br>
-        
-        <TextField      placeholder="Login"      data={loginData}    setData={setLoginData}/>
-        <br></br>
-        <PasswordField  placeholder="Password"   data={passwordData} setData={setPasswordData}/>
-
-        <br></br>
-
-        {newCharInput}
-
-        <br></br>
-
-        <button type="button" onClick={handleStart} >
-            Start Game
-        </button>
 
         <hr></hr>
+        <form method="post" onSubmit={handleSubmit}>
+
+        <input name="username" type="text" placeholder="Username"/>
+        <br/>
+        <input name="password" type="password" placeholder="Password"/>
+        <hr></hr>
+
+        {charForm}
+
+        <button type="submit">{confirmText}</button>
+
+        </form>
+
         </>
+    );
+}
+
+export default function StartScreen({ confirm, setData }) {
+
+    const [newGame, isNewGame] = useState(true);
+
+    return (
+        <div class='parent flex-parent'>
+            <div class='child flex-child'>
+                <h2>WIP GAMING</h2>
+
+                <button type="button" onClick={() => isNewGame(true)} >
+                    New Game
+                </button>
+
+                <button type="button" onClick={() => isNewGame(false)} >
+                    Load Game
+                </button>
+
+                <br/>
+
+                <LoginForm setData={setData} startGame={() => confirm(true)} newGame={newGame}/>
+
+                <hr/>
+            </div>
+        
+            <div class='child flex-child'>
+                [high score leaderboards will eventually go here]
+            </div>
+        </div>
     );
 }

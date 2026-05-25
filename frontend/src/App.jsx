@@ -6,11 +6,11 @@ import GameScreen from './components/GameScreen';
 
 function App() {
   const [gameReady, isGameReady] = useState(false);
-  const [gameData, setGameData] = useState([]);
+  const [gameData, setGameData] = useState({});
   
   let currentScreen = null;
   if (!gameReady){
-      currentScreen = <StartScreen confirm={isGameReady} setStartData={setGameData}/>
+      currentScreen = <StartScreen confirm={isGameReady} setData={setGameData}/>
   }
   else{
       currentScreen = <GameScreen data={gameData}/>

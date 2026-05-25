@@ -1,3 +1,31 @@
+.inline-block-child {
+  display: inline-block;
+}
+
+.flex-parent {
+  display: flex;
+}
+.flex-child {
+  flex: 1;
+}
+
+.parent {
+  padding: 1rem
+}
+.child {
+  /*border: 1px solid black;*/
+  padding: 1rem
+}
+
+.grid-parent {
+  display: grid;
+  grid-template-columns: 1fr 1fr
+}
+
+.inline-flex-parent {
+  display: inline-flex;
+}
+
 /*
 .counter {
   font-size: 16px;
