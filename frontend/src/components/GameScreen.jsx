@@ -1,5 +1,21 @@
 import { useState } from 'react';
 
+function MinimapSquare(data) {
+
+    //placeholder testing
+    let classtype = "no-tile"
+
+    if (data % 2){
+        classtype = "unknown-tile"
+    }
+
+    return (
+        <td class={classtype}>
+            <div>{data}</div>
+        </td>
+    );
+}
+
 function Minimap(mapData, viewData) {
 
     let data = [[1,2,3],[4,5,6],[7,8,9]]
@@ -8,10 +24,7 @@ function Minimap(mapData, viewData) {
         <table class="minimap-grid">
             {data.map(item => 
                 <tr>
-                    {item.map(i => 
-                    <td>
-                        <div>{i}</div>
-                    </td>)}
+                    {item.map(i => MinimapSquare(i))}
                 </tr>)}
         </table>
     );

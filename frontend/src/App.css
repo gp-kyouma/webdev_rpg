@@ -7,11 +7,19 @@
 .minimap-grid td {
   width: 25px;              /* Small square width */
   height: 25px;             /* Small square height */
-  border: 1px solid black;  /* Visible border */
+  border: 1px solid black;
   padding: 0;               /* Remove default padding */
   align-items: center;
   justify-content: center;
   text-align: center;
+}
+
+.no-tile {
+  background: black;
+}
+
+.unknown-tile {
+  background: grey;
 }
 
 .inline-block-child {
