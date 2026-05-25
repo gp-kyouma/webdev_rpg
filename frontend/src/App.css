@@ -1,3 +1,19 @@
+
+.minimap-grid {
+  border-collapse: collapse; /* Merges cell borders */
+  table-layout: fixed;      /* Ensures consistent cell sizes */
+  width: 75px;             /* Total table width */
+}
+.minimap-grid td {
+  width: 25px;              /* Small square width */
+  height: 25px;             /* Small square height */
+  border: 1px solid black;  /* Visible border */
+  padding: 0;               /* Remove default padding */
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
 .inline-block-child {
   display: inline-block;
 }
