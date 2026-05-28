@@ -61,14 +61,20 @@ function MinimapSquare(data) {
 
 export default function Minimap({mapData, viewData}) {
 
+    // maybe something like
+    // for all xy, data[xy] = [mapdata[xy], viewdata[xy]]
+    // daí não precisa embutir diretamente dentro de mapdata, dá pra juntar aqui
+    
     return (
         <div class='child flex-child'>
             <p></p>
             <table class="minimap-grid">
-                {mapData.map(item => 
-                    <tr>
-                        {item.map(i => MinimapSquare(i))}
-                    </tr>)}
+                <tbody>
+                    {mapData.map(item => 
+                        <tr>
+                            {item.map(i => MinimapSquare(i))}
+                        </tr>)}
+                </tbody>
             </table>
         </div>
     );

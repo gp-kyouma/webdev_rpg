@@ -145,6 +145,87 @@ export function GenerateMap(floor) {
 
         ok = true;
     }
+
+    // every time gamescreen *renders*, this function is run *twice*. why.
+    console.log(serialize(mapData))
+    console.log(floor)
     
     return mapData;
+}
+
+//--------------------------------------------------------------------------------------------
+
+// for saving in database
+
+export function serialize(mapData) {
+    let data = ""
+    for (let y = 0; y < MapHeight; y++) {
+        for (let x = 0; x < MapWidth; x++) {
+            switch (mapData[y][x]) {
+                case TileTypes.NONE:
+                    data += ' '
+                    break;
+            
+                case TileTypes.DEFAULT:
+                    data += 'D'
+                    break;
+
+                case TileTypes.START:
+                    data += 'S'
+                    break;
+
+                case TileTypes.TREASURE:
+                    data += 'C'
+                    break;
+
+                case TileTypes.SHOP:
+                    data += '$'
+                    break;
+
+                case TileTypes.BOSS:
+                    data += 'B'
+                    break;
+            }
+        }
+        data += '\n'//for readability. will be discarded in deserialization
+    }
+    return data;
+}
+
+export function deserialize(stringData) {
+    let data = EmptyMap()
+    let string = stringData.split("")
+
+    for (let y = 0; y < MapHeight; y++) {
+        for (let x = 0; x < MapWidth; x++) {
+            let char = string.shift()
+            switch (char) {
+                case ' ':
+                    //data[y][x] = TileTypes.NONE //unnecessary because of EmptyMap()
+                    break;
+            
+                case 'D':
+                    data[y][x] = TileTypes.DEFAULT
+                    break;
+
+                case 'S':
+                    data[y][x] = TileTypes.START
+                    break;
+
+                case 'C':
+                    data[y][x] = TileTypes.TREASURE 
+                    break;
+
+                case '$':
+                    data[y][x] = TileTypes.SHOP
+                    break;
+
+                case 'B':
+                    data[y][x] = TileTypes.BOSS 
+                    break;
+            }
+        }
+        string.shift()// discard newline
+    }
+    return data;
 }

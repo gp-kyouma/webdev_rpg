@@ -20,6 +20,8 @@ export default function GameScreen({data}) {
     const [log, setLog] = useState(["first"]);
     const [map, setMap] = useState(maputils.GenerateMap(1));
 
+    const [serial, setSerial] = useState("");//testing map de/serialization
+
     function addToLog(newText) {
         setLog([...log, newText]);
     }
@@ -44,8 +46,24 @@ export default function GameScreen({data}) {
         <br/>
 
         <button type="button" onClick={() => setMap(maputils.GenerateMap(1))}>
-            generate new map
+            generate new map (floor level 1)
         </button>
+
+        <button type="button" onClick={() => setMap(maputils.GenerateMap(20))}>
+            generate new map (floor level 20)
+        </button>
+
+        <br/>
+
+        <button type="button" onClick={() => setSerial(maputils.serialize(map))}>
+            serialize map
+        </button>
+
+        <button type="button" onClick={() => setMap(maputils.deserialize(serial))}>
+            deserialize map
+        </button>
+
+        <pre>{serial}</pre>
         </>
     );
 }
