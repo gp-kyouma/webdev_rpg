@@ -17,10 +17,23 @@ function Log({logData}) {
 
 export default function GameScreen({data}) {
 
-    const [log, setLog] = useState(["first"]);
-    const [map, setMap] = useState(maputils.GenerateMap(1));
+    const [log, setLog] = useState([]);
+    const [map, setMap] = useState([]);//this will be replaced by a bigger "gamestate" structure
 
-    const [serial, setSerial] = useState("");//testing map de/serialization
+    const [init, setInit] = useState(false);
+
+    const [serial, setSerial] = useState("");//testing map de/serialization. remove later
+
+    if (!init)
+    {   
+        // this *SHOULD...* only run once, on first render
+
+        // do all initialization from data, initial map generation if new game, etc
+        // currently this is only:
+        setMap(maputils.GenerateMap(1))
+
+        setInit(true)
+    }
 
     function addToLog(newText) {
         setLog([...log, newText]);
