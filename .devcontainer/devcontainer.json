@@ -1,0 +1,21 @@
+{
+    "name": "Yii2 & React Full-Stack Development",
+    "image": "mcr.microsoft.com/devcontainers/php:8.2-bullseye",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bmewburn.vscode-inteliphense-client",
+                "yiisoft.yii2-vscode-extension",
+                "dsznajder.es7-react-js-snippets",
+                "dbaeumer.vscode-eslint"
+            ]
+        }
+    },
+    // Adicionada a porta 5173 para o servidor de desenvolvimento do Vite
+    "forwardPorts": [8080, 5173, 3306],
+    
+    "postStartCommand": "sudo service mariadb start",
+        
+    //why does it go "✖ Running postCreateCommand...". why the ✖. whats up with that
+    "postCreateCommand": "sudo rm -f /etc/apt/sources.list.d/yarn.list && sudo apt-get update && sudo apt-get install -y default-mysql-server libmariadb-dev nodejs npm && sudo docker-php-ext-install pdo_mysql || true && sudo sh -c 'echo \"extension=pdo_mysql.so\" > /usr/local/etc/php/conf.d/docker-php-ext-pdo_mysql.ini' && sudo service mariadb start && echo 'Aguardando MariaDB...' && until sudo mariadb-admin ping >/dev/null 2>&1; do sleep 1; done && sudo mariadb -u root < ${containerWorkspaceFolder}/backend/schema.sql && sudo mariadb -u root -e \"CREATE USER IF NOT EXISTS 'webrpg_app'@'localhost' IDENTIFIED BY 'webrpgapp'; GRANT ALL PRIVILEGES ON db_webrpg.* TO 'webrpg_app'@'localhost'; FLUSH PRIVILEGES;\" && sudo npm install -g n && sudo n lts && cd backend && composer install"
+}
