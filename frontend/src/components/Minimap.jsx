@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { TileTypes } from './MapUtils';
 
 function MinimapSquare(data) {

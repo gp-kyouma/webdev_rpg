@@ -3,6 +3,8 @@
 
 //--------------------------------------------------------------------------------------------
 
+import {clamp} from "./utils"
+
 const MapWidth = 9
 const MapHeight = 9
 
@@ -12,13 +14,16 @@ export const TileTypes = Object.freeze({
   START: 2,
   TREASURE: 3,
   SHOP: 4,
-  BOSS: 5
+  BOSS: 5,
+
+  // for view data
+  UNKNOWN: 100,
+  VISITED: 110,
+  CURRENT: 120
 });
 
 const MaxRooms = 15;
 const MinRooms = 7;
-
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 //--------------------------------------------------------------------------------------------
 
@@ -186,6 +191,19 @@ export function serialize(mapData) {
                 case TileTypes.BOSS:
                     data += 'B'
                     break;
+
+                //visibility
+                case TileTypes.UNKNOWN:
+                    data += '?'
+                    break;
+
+                case TileTypes.VISITED:
+                    data += '.'
+                    break;
+
+                case TileTypes.CURRENT:
+                    data += '!'
+                    break;
             }
         }
         data += '\n'//for readability. will be discarded in deserialization
@@ -223,6 +241,19 @@ export function deserialize(stringData) {
 
                 case 'B':
                     data[y][x] = TileTypes.BOSS 
+                    break;
+
+                //visibility
+                case '?':
+                    data[y][x] = TileTypes.UNKNOWN 
+                    break;
+
+                case '.':
+                    data[y][x] = TileTypes.VISITED
+                    break;
+
+                case '!':
+                    data[y][x] = TileTypes.CURRENT 
                     break;
             }
         }
