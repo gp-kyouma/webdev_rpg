@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import Minimap from './Minimap';
 import * as maputils from './MapUtils.js'
