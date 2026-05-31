@@ -18,16 +18,18 @@ function Log({logData}) {
 export default function GameScreen({data}) {
 
     const [log, setLog] = useState([]);
-    const [map, setMap] = useState([]);//this will be replaced by a bigger "gamestate" structure
+
+    //these will be replaced by a bigger "gamestate" structure
+    const [map, setMap] = useState([]);
     const [view, setView] = useState([]);
-    const [pos, setPos] = useState([4,4]);
+    const [pos, setPos] = useState([]);
 
     const [init, setInit] = useState(false);
 
     const [serial, setSerial] = useState("");//testing map de/serialization. remove later
 
-    // very very basic movement test
-    function move(map, view, direction){
+    // basic movement test
+    function move(map, view, pos, direction){
         let [x,y] = pos
         switch (direction) {
             case 'N':
@@ -84,6 +86,16 @@ export default function GameScreen({data}) {
         setView(newView)
     }
 
+    function NewMapReset(floor)
+    {
+        let newmap = maputils.GenerateMap(floor)
+        let newview = maputils.EmptyMap()
+        let newpos = [4,4]
+
+        setMap(newmap)
+        move(newmap, newview, newpos, '')
+    }
+
     if (!init)
     {   
         // this *SHOULD...* only run once, on first render
@@ -92,10 +104,7 @@ export default function GameScreen({data}) {
 
         // do all initialization from data, initial map generation if new game, etc
         // currently this is only:
-        let initmap = maputils.GenerateMap(1)
-        let initview = maputils.EmptyMap()
-        setMap(initmap)
-        move(initmap, initview, '')//some bs but it worked
+        NewMapReset(1)
 
         setInit(true)
     }
@@ -117,18 +126,16 @@ export default function GameScreen({data}) {
             {JSON.stringify(data,null,2)}
         </h2>
 
-        //rudimentary movement
-        
         <div class="cross-container">
-            <button class="btn btn-top" type="button" onClick={() => move(map, view, 'N')}>NORTH</button>
+            <button class="btn btn-top" type="button" onClick={() => move(map, view, pos, 'N')}>NORTH</button>
             <br/>
-            <button class="btn btn-left" type="button" onClick={() => move(map, view, 'W')}>WEST</button>
+            <button class="btn btn-left" type="button" onClick={() => move(map, view, pos, 'W')}>WEST</button>
             <p class="btn-text btn-middle">
                 ({pos[0]}, {pos[1]})
             </p>
-            <button class="btn btn-right" type="button" onClick={() => move(map, view, 'E')}>EAST</button>
+            <button class="btn btn-right" type="button" onClick={() => move(map, view, pos, 'E')}>EAST</button>
             <br/>
-            <button class="btn btn-bottom" type="button" onClick={() => move(map, view, 'S')}>SOUTH</button>
+            <button class="btn btn-bottom" type="button" onClick={() => move(map, view, pos, 'S')}>SOUTH</button>
         </div>
 
         <br/>
@@ -139,17 +146,17 @@ export default function GameScreen({data}) {
 
         <br/>
 
-        //these don't reset the view<br/>
-        <button type="button" onClick={() => setMap(maputils.GenerateMap(1))}>
+        <button type="button" onClick={() => NewMapReset(1)}>
             generate new map (floor level 1)
         </button>
 
-        <button type="button" onClick={() => setMap(maputils.GenerateMap(20))}>
+        <button type="button" onClick={() => NewMapReset(20)}>
             generate new map (floor level 20)
         </button>
 
         <br/>
 
+        //these don't reset the view<br/>
         <button type="button" onClick={() => setSerial(maputils.serialize(map))}>
             serialize map
         </button>
