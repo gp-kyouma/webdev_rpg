@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Minimap from './Minimap';
 import * as maputils from './MapUtils.js'
@@ -19,31 +19,83 @@ export default function GameScreen({data}) {
 
     const [log, setLog] = useState([]);
     const [map, setMap] = useState([]);//this will be replaced by a bigger "gamestate" structure
-
     const [view, setView] = useState([]);
+    const [pos, setPos] = useState([4,4]);
 
     const [init, setInit] = useState(false);
 
     const [serial, setSerial] = useState("");//testing map de/serialization. remove later
 
+    // very very basic movement test
+    function move(map, view, direction){
+        let [x,y] = pos
+        switch (direction) {
+            case 'N':
+                y=y-1
+                break;
+        
+            case 'S':
+                y=y+1
+                break;
+
+            case 'E':
+                x=x+1
+                break;
+
+            case 'W':
+                x=x-1
+                break;
+            
+            default:
+                break;
+        }
+
+        if (y < 0 || y >= maputils.MapHeight)
+            return
+
+        if (x < 0 || x >= maputils.MapWidth)
+            return
+
+        if (map[y][x] == maputils.TileTypes.NONE)
+            return
+
+        let newView = structuredClone(view)
+        newView[y][x] = maputils.TileTypes.CURRENT
+
+        function updateAdjacentView(x,y){
+            if (map[y][x] != maputils.TileTypes.NONE){
+                if (view[y][x] == maputils.TileTypes.CURRENT)
+                    newView[y][x] = maputils.TileTypes.VISITED
+                else if (view[y][x] == maputils.TileTypes.NONE)
+                    newView[y][x] = maputils.TileTypes.UNKNOWN
+            }
+        }
+
+        if (x > 0) 
+            updateAdjacentView(x-1,y);
+        if (x < maputils.MapWidth-1) 
+            updateAdjacentView(x+1,y);
+        if (y > 0) 
+            updateAdjacentView(x,y-1);
+        if (y < maputils.MapHeight-1) 
+            updateAdjacentView(x,y+1);
+
+        setPos([x,y])
+        setView(newView)
+    }
+
     if (!init)
     {   
         // this *SHOULD...* only run once, on first render
         // (this might be bad actually. what if the user starts a new game immediately after finishing another?)
+        // just reset the init flag then. 4head
 
         // do all initialization from data, initial map generation if new game, etc
         // currently this is only:
-        setMap(maputils.GenerateMap(1))
-
-        // placeholder for testing visibility
-        let viewmap = maputils.EmptyMap()
-        for (let i = 0; i < maputils.MapHeight; i++) {
-            for (let j = 0; j < maputils.MapWidth; j++) {
-                viewmap[i][j] = maputils.TileTypes.VISITED;
-            }
-        }
-        viewmap[4][5] = maputils.TileTypes.CURRENT;
-        setView(viewmap)
+        let initmap = maputils.GenerateMap(1)
+        let initview = maputils.EmptyMap()
+        setMap(initmap)
+        move(initmap, initview, '')//some bs but it worked
 
         setInit(true)
     }
@@ -65,12 +117,29 @@ export default function GameScreen({data}) {
             {JSON.stringify(data,null,2)}
         </h2>
 
+        //rudimentary movement
+        
+        <div class="cross-container">
+            <button class="btn btn-top" type="button" onClick={() => move(map, view, 'N')}>NORTH</button>
+            <br/>
+            <button class="btn btn-left" type="button" onClick={() => move(map, view, 'W')}>WEST</button>
+            <p class="btn-text btn-middle">
+                ({pos[0]}, {pos[1]})
+            </p>
+            <button class="btn btn-right" type="button" onClick={() => move(map, view, 'E')}>EAST</button>
+            <br/>
+            <button class="btn btn-bottom" type="button" onClick={() => move(map, view, 'S')}>SOUTH</button>
+        </div>
+
+        <br/>
+
         <button type="button" onClick={() => addToLog("new line")}>
             add line to log
         </button>
 
         <br/>
 
+        //these don't reset the view<br/>
         <button type="button" onClick={() => setMap(maputils.GenerateMap(1))}>
             generate new map (floor level 1)
         </button>
