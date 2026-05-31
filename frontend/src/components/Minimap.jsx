@@ -1,54 +1,65 @@
-import { TileTypes } from './MapUtils';
+import { TileTypes, EmptyMap, MapWidth, MapHeight } from './MapUtils';
 
 function MinimapSquare(data) {
 
-    let classtype = "current-tile-" // currently ignoring the visibility part. don't forget.
+    let [mapdata, viewdata] = data
+    
+    let classtype = ""
     let label = ""
+    let skip = false
 
-    switch (data) {
+    switch (mapdata) {
         case TileTypes.NONE:
             classtype = "no-tile"
+            skip = true
             break;
-    
+        
         case TileTypes.DEFAULT:
-            classtype = classtype + "default"
+            classtype = "default"
             break;
 
         case TileTypes.START:
-            classtype = classtype + "safe"
+            classtype = "safe"
             label = "start"
             break;
 
         case TileTypes.TREASURE:
-            classtype = classtype + "treasure"
+            classtype = "treasure"
             label = "chst"
             break;
 
         case TileTypes.SHOP:
-            classtype = classtype + "shop"
+            classtype = "shop"
             label = "shop"
             break;
 
         case TileTypes.BOSS:
-            classtype = classtype + "boss"
+            classtype = "boss"
             label = "boss"
             break;
     }
-    
-    /*
-    //shh.
-    else if (data == 1){
-        classtype = "unknown-tile"
-        data = "?"
+
+    if (!skip){
+        switch (viewdata) {
+            case TileTypes.NONE://redundant but keep it anyways
+                classtype = "no-tile"
+                break;
+        
+            case TileTypes.UNKNOWN:
+                classtype = "unknown-tile"
+                label = "?"
+                break;
+
+            case TileTypes.VISITED:
+                classtype = "visited-tile-" + classtype
+                break;
+
+            case TileTypes.CURRENT:
+                classtype = "current-tile-" + classtype
+                label = "^_^"
+                break;
+        }
     }
-    else{
-        if ((data%10) < 5){
-            classtype = "visited-tile-"
-        }
-        else{
-            classtype = "current-tile-"
-        }
-    */
 
     return (
         <td class={classtype}>
@@ -59,16 +70,22 @@ function MinimapSquare(data) {
 
 export default function Minimap({mapData, viewData}) {
 
-    // maybe something like
     // for all xy, data[xy] = [mapdata[xy], viewdata[xy]]
-    // daí não precisa embutir diretamente dentro de mapdata, dá pra juntar aqui
+    // daí não precisa embutir visibilidade diretamente dentro de mapdata, dá pra juntar aqui
+
+    let data = EmptyMap()
+    for (let i = 0; i < MapHeight; i++) {
+        for (let j = 0; j < MapWidth; j++) {
+            data[i][j] = [mapData[i][j], viewData[i][j]];
+        }
+    }
     
     return (
         <div class='child flex-child'>
             <p></p>
             <table class="minimap-grid">
                 <tbody>
-                    {mapData.map(item => 
+                    {data.map(item => 
                         <tr>
                             {item.map(i => MinimapSquare(i))}
                         </tr>)}

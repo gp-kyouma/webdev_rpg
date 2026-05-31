@@ -20,6 +20,8 @@ export default function GameScreen({data}) {
     const [log, setLog] = useState([]);
     const [map, setMap] = useState([]);//this will be replaced by a bigger "gamestate" structure
 
+    const [view, setView] = useState([]);
+
     const [init, setInit] = useState(false);
 
     const [serial, setSerial] = useState("");//testing map de/serialization. remove later
@@ -27,10 +29,21 @@ export default function GameScreen({data}) {
     if (!init)
     {   
         // this *SHOULD...* only run once, on first render
+        // (this might be bad actually. what if the user starts a new game immediately after finishing another?)
 
         // do all initialization from data, initial map generation if new game, etc
         // currently this is only:
         setMap(maputils.GenerateMap(1))
+
+        // placeholder for testing visibility
+        let viewmap = maputils.EmptyMap()
+        for (let i = 0; i < maputils.MapHeight; i++) {
+            for (let j = 0; j < maputils.MapWidth; j++) {
+                viewmap[i][j] = maputils.TileTypes.VISITED;
+            }
+        }
+        viewmap[4][5] = maputils.TileTypes.CURRENT;
+        setView(viewmap)
 
         setInit(true)
     }
@@ -43,7 +56,7 @@ export default function GameScreen({data}) {
         <>
         <div class='parent flex-parent'>
             <Log logData = {log}/>
-            <Minimap mapData={map}/>
+            <Minimap mapData={map} viewData={view}/>
         </div>
 
         <h2>

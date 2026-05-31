@@ -8,7 +8,7 @@ function App() {
   const [gameReady, isGameReady] = useState(false);
   const [gameData, setGameData] = useState({});
   
-  let currentScreen = null;
+  let currentScreen;
   if (!gameReady){
       currentScreen = <StartScreen confirm={isGameReady} setData={setGameData}/>
   }

@@ -5,8 +5,8 @@
 
 import {clamp} from "./utils"
 
-const MapWidth = 9
-const MapHeight = 9
+export const MapWidth = 9
+export const MapHeight = 9
 
 export const TileTypes = Object.freeze({
   NONE: 0,
@@ -27,7 +27,7 @@ const MinRooms = 7;
 
 //--------------------------------------------------------------------------------------------
 
-function EmptyMap() {
+export function EmptyMap() {
     let data = []
     for (let i = 0; i < MapHeight; i++) {
         data[i] = [];
