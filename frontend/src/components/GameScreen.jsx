@@ -127,15 +127,15 @@ export default function GameScreen({data}) {
         </h2>
 
         <div class="cross-container">
-            <button class="btn btn-top" type="button" onClick={() => move(map, view, pos, 'N')}>NORTH</button>
+            <button class="btn btn-top" type="button" onClick={() => move(map, view, pos, 'N')}>N</button>
             <br/>
-            <button class="btn btn-left" type="button" onClick={() => move(map, view, pos, 'W')}>WEST</button>
+            <button class="btn btn-left" type="button" onClick={() => move(map, view, pos, 'W')}>W</button>
             <p class="btn-text btn-middle">
-                ({pos[0]}, {pos[1]})
+                {pos[0]}, {pos[1]}
             </p>
-            <button class="btn btn-right" type="button" onClick={() => move(map, view, pos, 'E')}>EAST</button>
+            <button class="btn btn-right" type="button" onClick={() => move(map, view, pos, 'E')}>E</button>
             <br/>
-            <button class="btn btn-bottom" type="button" onClick={() => move(map, view, pos, 'S')}>SOUTH</button>
+            <button class="btn btn-bottom" type="button" onClick={() => move(map, view, pos, 'S')}>S</button>
         </div>
 
         <br/>
