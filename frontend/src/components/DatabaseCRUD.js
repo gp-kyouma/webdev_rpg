@@ -8,7 +8,7 @@ import axios from 'axios';
 //idk how much of a problem it would be to make all of these async...
 //guess i'll have to find out later if it works
 
-export function DB_get(table,id)
+export function DB_get(table,id,setData)
 {
     let search_params;
     //allow for getting the whole table, by passing '' as id instead of an object
@@ -18,12 +18,12 @@ export function DB_get(table,id)
     else
         search_params = structuredClone(id);
 
-    let ret;
+    console.log(JSON.stringify(search_params))//NOT working
 
     // following the react+yii class example, this should just work
-    axios.get('/api/' + table, { params: search_params }).then(res => ret = structuredClone(res.data));
-
-    return ret;
+    axios.get('/api/' + table, { params: search_params }).then(res => setData(res.data));
+    
+    //this probably REALLY needs a return value...
 }
 
 export function DB_create(table,data)//aka post
