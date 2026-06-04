@@ -47,6 +47,13 @@ class ScoresSearch extends Scores
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            //custom sorting for score table
+            'sort' => ['defaultOrder' => [
+                'floor' => SORT_DESC,
+                'total_exp' => SORT_DESC,
+                'total_value' => SORT_DESC,
+                'gameover_time' => SORT_ASC,
+            ],]
         ]);
 
         //$this->load($params, $formName);

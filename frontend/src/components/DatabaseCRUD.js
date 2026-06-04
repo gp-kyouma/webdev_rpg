@@ -15,7 +15,7 @@ export async function _get(table,id)
 
     //yay async.
     try {
-        const response = await axios.get('/api/' + table, { params: search_params })
+        const response = await axios.get('/api/' + table, { params: search_params, paramsSerializer: { indexes: null } })
         //console.log(JSON.stringify(response.data));
         ret = structuredClone(response.data);
     } catch (error) {
@@ -25,28 +25,36 @@ export async function _get(table,id)
     return ret;
 }
 
-export function _create(table,data)//aka post
+export async function _create(table,data)//aka post
 {
     const new_data = structuredClone(data);
 
-    //this is the simplest one and should simply work as imagined
-    //hopefully no shenanigans here
-    axios.post('/api/' + table, new_data);
+    await axios.post('/api/' + table, new_data);
 }
 
-export function _update(table,id,data)//aka put
+export async function _update(table,id,data)//aka put
 {
     const search_params = structuredClone(id);
     const new_data = structuredClone(data);
     
     //hopefully this works the way i imagine it to
-    axios.put('/api/' + table, new_data, { params: search_params });
+    //NO IT DOES NOT.
+    try {
+        await axios.put('/api/' + table, new_data, { params: search_params });
+    } catch (error) {
+        console.log((error));
+    }
 }
 
-export function _delete(table,id)
+export async function _delete(table,id)
 {
     const search_params = structuredClone(id);
     
     //hopefully this works the way i imagine it to
-    axios.delete('/api/' + table, { params: search_params })
+    //NO IT DOES NOT.
+    try {
+        await axios.delete('/api/' + table, { params: search_params })
+    } catch (error) {
+        console.log((error));
+    }
 }

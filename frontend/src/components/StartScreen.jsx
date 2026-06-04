@@ -12,8 +12,10 @@ export default function StartScreen({ confirm, setData }) {
     const [scores, setScores] = useState([]);
 
     function sortedScores() {
-        const params = { sort:'-floor,-total_exp,-total_value' }//SORT IS FREE, THANK YOU STACK OVERFLOW YII WIZARDS
-        return db._get('scores', params);
+        //SORT IS FREE, THANK YOU STACK OVERFLOW YII WIZARDS
+        //...although it's not being used here atp,
+        //sorting by multiple params is being done directly in ScoresSearch.php
+        return db._get('scores', {});
     }
 
     async function getScores() {
@@ -26,6 +28,41 @@ export default function StartScreen({ confirm, setData }) {
         const fetchScores = async () => { await getScores(); };
         fetchScores();
     });
+
+    //SOME STUFF TO TEST DB MANIPULATION, REMOVE LATER
+    const [count, setCount] = useState(1);
+    function makeScore(){
+
+        const date = new Date(); // Current date/time
+
+        // Format: 'YYYY-MM-DDTHH:mm:ss.sssZ' -> 'YYYY-MM-DD HH:mm:ss'
+        const sqlTimestamp = date.toISOString().slice(0, 19).replace('T', ' ');
+
+        console.log(sqlTimestamp);
+
+        let score = {   user_id : 2, 
+                        gameover_time : sqlTimestamp, 
+                        char_name: "Poopyhead #" + count, 
+                        floor: 4, 
+                        total_exp: count * 5, 
+                        final_level: 67, 
+                        total_value: count * 100}
+
+        setCount(count => count + 1)
+        return score
+    }
+    function addScore(){
+        db._create('scores',makeScore())
+        getScores()
+    }
+    function updateScore(){
+        db._update('scores',{id: 3},makeScore())
+        getScores()
+    }
+    function removeScore(){
+        db._delete('scores',{id: 2})
+        getScores()
+    }
 
     let currentScreen;
     if (!loggedIn){
@@ -59,6 +96,11 @@ export default function StartScreen({ confirm, setData }) {
                 }
 
                 <hr/>
+                //DB TESTS<br/>
+                <button type="button" onClick={() => addScore()} > Add Score </button><br/>
+                <button type="button" onClick={() => updateScore()} > Update Score NOT WORKING </button><br/>
+                <button type="button" onClick={() => removeScore()} > Remove Score NOT WORKING </button><br/>
+                count:{count}
             </div>
         </div>
     );
