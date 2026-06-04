@@ -2,20 +2,30 @@ import { useState, useEffect } from 'react';
 import LoginScreen from './LoginScreen';
 import UserScreen from './UserScreen';
 import { VerifyUser, VerifyGameData } from './verify';
-import { DB_get } from './DatabaseCRUD';
+import * as db from './DatabaseCRUD';
 
 export default function StartScreen({ confirm, setData }) {
 
     const [loggedIn, isLoggedIn] = useState(false);
     const [userData, setUserData] = useState({});
-
+    
     const [scores, setScores] = useState([]);
 
+    function sortedScores() {
+        const params = { sort:'-floor,-total_exp,-total_value' }//SORT IS FREE, THANK YOU STACK OVERFLOW YII WIZARDS
+        return db._get('scores', params);
+    }
+
+    async function getScores() {
+        const data = await sortedScores()
+        await setScores(data);
+    };
+
+    // wrangling React into working like a real programming language where things happen synchronously:
     useEffect(() => {
-        const params = { user_id: 1 }//NOT working.
-        DB_get('scores', params, setScores);
-        //sort scores...? lets not worry abt that rn
-    }, []);
+        const fetchScores = async () => { await getScores(); };
+        fetchScores();
+    });
 
     let currentScreen;
     if (!loggedIn){
@@ -39,8 +49,6 @@ export default function StartScreen({ confirm, setData }) {
                 <h2>LEADERBOARDS</h2>
                 <hr/>
 
-                // placeholder, this will be a fancy sortable table eventually
-                // but hey, it's loading data, that's something
                 {scores.map(score => (
                     <div key={score.id} class="">
                         <p class="">

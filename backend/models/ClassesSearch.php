@@ -49,7 +49,8 @@ class ClassesSearch extends Classes
             'query' => $query,
         ]);
 
-        $this->load($params, $formName);
+        //$this->load($params, $formName);
+        $this->load($params, '');
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails

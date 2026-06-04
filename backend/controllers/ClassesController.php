@@ -14,4 +14,18 @@ class ClassesController extends ActiveController
  ];
  return $behaviors;
  }
+ //https://stackoverflow.com/questions/25522462/yii2-rest-query
+ public function actions() {
+
+    $actions = parent::actions();
+    $actions['index']['prepareDataProvider'] = [$this, 'prepareDataProvider'];
+
+    return $actions;
+}
+
+public function prepareDataProvider() {
+
+    $searchModel = new \app\models\ClassesSearch();    
+    return $searchModel->search(\Yii::$app->request->queryParams);
+}
 }

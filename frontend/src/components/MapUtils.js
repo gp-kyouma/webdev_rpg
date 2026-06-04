@@ -150,11 +150,6 @@ export function GenerateMap(floor) {
 
         ok = true;
     }
-
-    // every time gamescreen *renders*, this function is run *twice*. why.
-    // fixed now...?
-    //console.log(serialize(mapData))
-    //console.log(floor)
     
     return mapData;
 }
