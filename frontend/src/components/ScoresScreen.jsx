@@ -10,13 +10,10 @@ export default function ScoresScreen() {
         setScores(data);
     };
 
-    // wrangling React into working like a real programming language where things happen synchronously:
-    // ...barely, because this runs a billion times instead of only once.
-    // should probably use init here, huh
     useEffect(() => {
         const fetchScores = async () => { await getScores(); };
         fetchScores();
-    });
+    }, []);
 
     return (
         <>
