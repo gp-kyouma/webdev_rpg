@@ -15,7 +15,7 @@ function Log({logData}) {
     );
 }
 
-export default function GameScreen({data, quit}) { //does setdata even go here...?
+export default function GameScreen({data, setData, quit}) {
 
     const [log, setLog] = useState([]);
 
@@ -125,7 +125,7 @@ export default function GameScreen({data, quit}) { //does setdata even go here..
             <br/>
             {JSON.stringify(data,null,2)}
             <br/>
-            
+
             <button type="button" onClick={() => quit()} > Save and Quit </button>
 
             <br/>//this is a lie currently, theres nothing to save. 

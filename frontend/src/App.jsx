@@ -19,7 +19,7 @@ function App() {
                                     userData={userData}   setUserData={setUserData}/>
   }
   else{
-      currentScreen = <GameScreen data={gameData} //setData={setGameData}
+      currentScreen = <GameScreen data={gameData} setData={setGameData}
                                   quit={() => isGameReady(false)}/>
   }
 
