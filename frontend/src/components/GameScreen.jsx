@@ -15,7 +15,7 @@ function Log({logData}) {
     );
 }
 
-export default function GameScreen({data}) {
+export default function GameScreen({data, quit}) { //does setdata even go here...?
 
     const [log, setLog] = useState([]);
 
@@ -24,9 +24,7 @@ export default function GameScreen({data}) {
     const [view, setView] = useState([]);
     const [pos, setPos] = useState([]);
 
-    const [init, setInit] = useState(false);
-
-    const [serial, setSerial] = useState("");//testing map de/serialization. remove later
+    const [init, setInit] = useState(false);//thejankers
 
     // basic movement test
     function move(map, view, pos, direction){
@@ -96,7 +94,11 @@ export default function GameScreen({data}) {
         move(newmap, newview, newpos, '')
     }
 
-    if (!init)
+    function addToLog(newText) {
+        setLog([...log, newText]);
+    }
+
+    if (!init)//thejankers
     {   
         // this *SHOULD...* only run once, on first render
         // (this might be bad actually. what if the user starts a new game immediately after finishing another?)
@@ -106,11 +108,9 @@ export default function GameScreen({data}) {
         // currently this is only:
         NewMapReset(1)
 
-        setInit(true)
-    }
+        addToLog("this should be its own componeeeent")
 
-    function addToLog(newText) {
-        setLog([...log, newText]);
+        setInit(true)
     }
 
     return (
@@ -124,6 +124,12 @@ export default function GameScreen({data}) {
             hello i am a placeholder here is my data from start screen: 
             <br/>
             {JSON.stringify(data,null,2)}
+            <br/>
+            
+            <button type="button" onClick={() => quit()} > Save and Quit </button>
+
+            <br/>//this is a lie currently, theres nothing to save. 
+            <br/>//also should alert user that the save is for the floor start
         </h2>
 
         <div class="cross-container">
@@ -153,19 +159,6 @@ export default function GameScreen({data}) {
         <button type="button" onClick={() => NewMapReset(20)}>
             generate new map (floor level 20)
         </button>
-
-        <br/>
-
-        //these don't reset the view<br/>
-        <button type="button" onClick={() => setSerial(maputils.serialize(map))}>
-            serialize map
-        </button>
-
-        <button type="button" onClick={() => setMap(maputils.deserialize(serial))}>
-            deserialize map
-        </button>
-
-        <pre>{serial}</pre>
         </>
     );
 }

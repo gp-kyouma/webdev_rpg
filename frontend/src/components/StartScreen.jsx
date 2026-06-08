@@ -1,12 +1,10 @@
-import { useState } from 'react';
 import LoginScreen from './LoginScreen';
 import UserScreen from './UserScreen';
 import ScoresScreen from './ScoresScreen';
 
-export default function StartScreen({ confirm, setData }) {
-
-    const [loggedIn, isLoggedIn] = useState(false);
-    const [userData, setUserData] = useState({});
+export default function StartScreen({   confirm,    setData, 
+                                        loggedIn,   isLoggedIn,
+                                        userData,   setUserData}) {
 
     let currentScreen;
     if (!loggedIn){
