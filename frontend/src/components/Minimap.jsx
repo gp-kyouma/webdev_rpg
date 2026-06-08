@@ -1,4 +1,4 @@
-import { TileTypes, EmptyMap, MapWidth, MapHeight } from './MapUtils';
+import { TileTypes, EmptyMap, MapWidth, MapHeight } from './js/MapUtils';
 
 function MinimapSquare(data) {
 

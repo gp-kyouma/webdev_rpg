@@ -1,4 +1,4 @@
-import { VerifyUser, RegisterUser } from "./verify";
+import { VerifyUser, RegisterUser } from "./js/verify";
 
 function LoginForm({setData, confirm}) {
 

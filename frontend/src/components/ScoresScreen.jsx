@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import * as db from './DatabaseCRUD';
+import * as db from './js/DatabaseCRUD';
 
 export default function ScoresScreen() {
 

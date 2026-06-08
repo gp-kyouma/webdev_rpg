@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { VerifyCharData } from './verify';
+import { VerifyCharData } from './js/verify';
 
 function NewCharForm({setData, confirm, userID}) {
 

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Minimap from './Minimap';
-import * as maputils from './MapUtils.js'
+import * as maputils from './js/MapUtils.js'
 
 function Log({logData}) {
     
