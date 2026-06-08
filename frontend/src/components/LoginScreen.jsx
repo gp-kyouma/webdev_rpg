@@ -1,3 +1,5 @@
+import { VerifyUser, RegisterUser } from "./verify";
+
 function LoginForm({setData, confirm}) {
 
     async function handleSubmit(e) {
@@ -10,8 +12,13 @@ function LoginForm({setData, confirm}) {
         // work with it as a plain object:
         const formJson = Object.fromEntries(formData.entries());
 
-        if (await setData(formJson))
-            confirm()
+        const buttonName = e.nativeEvent.submitter.name
+
+        if (buttonName == "register")
+            await RegisterUser(formJson)
+        else if (buttonName == "login")
+            if (await VerifyUser(formJson, setData))
+                confirm()
     }
 
     return (
@@ -25,7 +32,8 @@ function LoginForm({setData, confirm}) {
         <input name="user_password" type="password" placeholder="Password"/>
         <hr></hr>
 
-        <button type="submit">Login / Register</button>
+        <button type="submit" name="login">Login</button>
+        <button type="submit" name="register">Register</button>
 
         </form>
 
