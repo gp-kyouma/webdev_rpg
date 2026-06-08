@@ -74,6 +74,7 @@ export async function VerifyUser(userData, setData){
 export function VerifyGameData(gameData, setData){
     // Verifies game data
     // TODO
+    // check empty name...? i guess bro
 
     //TODO
     console.log("TODO VERIFY GAME DATA")

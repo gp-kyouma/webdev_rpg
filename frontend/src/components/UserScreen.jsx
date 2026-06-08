@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { VerifyGameData } from './verify';
 
-function NewCharForm({setData, confirm}) {
+function NewCharForm({setData, confirm, userID}) {
 
     async function handleSubmit(e) {
         // Prevent the browser from reloading the page
@@ -11,7 +11,10 @@ function NewCharForm({setData, confirm}) {
         const formData = new FormData(e.target);
 
         // work with it as a plain object:
-        const formJson = Object.fromEntries(formData.entries());
+        let formJson = Object.fromEntries(formData.entries());
+
+        // inject user id into the data that will be sent upwards
+        formJson.user_id = userID
 
         if (await VerifyGameData(formJson, setData))
             confirm()
@@ -51,7 +54,7 @@ export default function UserScreen({ data, confirm, logOut, setData }) {
 
     // TODO: load user data (ongoing game, past scores)
 
-    let NewCharScreen = <NewCharForm setData={setData} confirm={() => confirm(true)}/>
+    let NewCharScreen = <NewCharForm setData={setData} confirm={() => confirm(true)} userID={data.id}/>
     let LoadCharScreen = <p>TODO: Load Character and Start Game</p>
     let PastScoresScreen = <p>TODO: Table of Past Scores</p>
 
@@ -94,12 +97,6 @@ export default function UserScreen({ data, confirm, logOut, setData }) {
             <br/>
 
             {currentScreen}
-
-            <h2>
-                hello i am a placeholder here is my data from login screen: 
-                <br/>
-                {JSON.stringify(data,null,2)}
-            </h2>
         </>
     );
 }
