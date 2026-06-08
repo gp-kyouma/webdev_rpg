@@ -2,7 +2,6 @@ import { useState } from 'react';
 import LoginScreen from './LoginScreen';
 import UserScreen from './UserScreen';
 import ScoresScreen from './ScoresScreen';
-import { VerifyGameData } from './verify';//remove later lol e
 
 export default function StartScreen({ confirm, setData }) {
 
@@ -11,10 +10,14 @@ export default function StartScreen({ confirm, setData }) {
 
     let currentScreen;
     if (!loggedIn){
-        currentScreen = <LoginScreen confirm={isLoggedIn} setData={setUserData}/>
+        currentScreen = <LoginScreen    confirm={isLoggedIn}
+                                        setData={setUserData}/>
     }
     else{
-        currentScreen = <UserScreen data={userData} confirm={confirm} setData={(data) => VerifyGameData(data, setData)}/>
+        currentScreen = <UserScreen data={userData} 
+                                    confirm={confirm} 
+                                    logOut={() => isLoggedIn(false)} 
+                                    setData={setData}/>
     }
 
     return (

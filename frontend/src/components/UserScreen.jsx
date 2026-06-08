@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { VerifyGameData } from './verify';
 
 function NewCharForm({setData, confirm}) {
 
@@ -12,7 +13,7 @@ function NewCharForm({setData, confirm}) {
         // work with it as a plain object:
         const formJson = Object.fromEntries(formData.entries());
 
-        if (await setData(formJson))
+        if (await VerifyGameData(formJson, setData))
             confirm()
     }
 
@@ -44,7 +45,7 @@ function NewCharForm({setData, confirm}) {
     );
 }
 
-export default function UserScreen({ data, confirm, setData }) {
+export default function UserScreen({ data, confirm, logOut, setData }) {
 
     const [mode, setMode] = useState(0);
 
@@ -71,7 +72,13 @@ export default function UserScreen({ data, confirm, setData }) {
 
     return (
         <>
+            <h2>
+                Welcome, {data.username}!
+                <br/>
+                <button type="button" onClick={() => logOut()} > Log Out </button>
+            </h2>
             <hr/>
+
             <button type="button" onClick={() => setMode(0)} >
                 Start New Game
             </button>
