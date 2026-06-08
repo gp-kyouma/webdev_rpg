@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { VerifyGameData } from './verify';
+import { VerifyCharData } from './verify';
 
 function NewCharForm({setData, confirm, userID}) {
 
@@ -16,7 +16,7 @@ function NewCharForm({setData, confirm, userID}) {
         // inject user id into the data that will be sent upwards
         formJson.user_id = userID
 
-        if (await VerifyGameData(formJson, setData))
+        if (await VerifyCharData(formJson, setData))
             confirm()
     }
 

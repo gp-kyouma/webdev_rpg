@@ -71,13 +71,18 @@ export async function VerifyUser(userData, setData){
     }
 }
 
-export function VerifyGameData(gameData, setData){
-    // Verifies game data
-    // TODO
-    // check empty name...? i guess bro
+export function VerifyCharData(charData, setData){
+    // Verifies new character data
+    // If character name is empty, alert user
 
-    //TODO
-    console.log("TODO VERIFY GAME DATA")
-    setData(gameData)
+    // ...and that's kind of it for now.
+
+    if (!charData.name || charData.name.trim().length === 0)
+    {
+        alert("Character name cannot be empty!")
+        return false
+    }
+
+    setData(charData)
     return true
 }
