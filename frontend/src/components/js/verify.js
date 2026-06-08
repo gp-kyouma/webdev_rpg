@@ -74,12 +74,21 @@ export async function VerifyUser(userData, setData){
 export function VerifyCharData(charData, setData){
     // Verifies new character data
     // If character name is empty, alert user
+    // If character name is too long, alert user
 
     // ...and that's kind of it for now.
 
     if (!charData.name || charData.name.trim().length === 0)
     {
         alert("Character name cannot be empty!")
+        return false
+    }
+
+    charData.name = charData.name.trim()
+
+    if (charData.name.length > 30)
+    {
+        alert("Character name is too long!")
         return false
     }
 
