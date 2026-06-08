@@ -37,7 +37,7 @@ $config = [
         'enableStrictParsing' => false,
         'showScriptName' => false,
         'rules' => [
-            ['class' => 'yii\rest\UrlRule', 'controller' => ['classes', 'enemy-data', 'game-states', 'items', 'login-users', 'scores', 'skills']], //these dashes...
+            ['class' => 'yii\rest\UrlRule', 'controller' => ['classes', 'enemy-data', 'game-states', 'items', 'login-users', 'scores', 'skills']],
         ],
     ],
     ],

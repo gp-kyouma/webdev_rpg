@@ -63,8 +63,8 @@ class LoginUsersSearch extends LoginUsers
             'id' => $this->id,
         ]);
 
-        $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'user_password', $this->user_password]);
+        //$query->andFilterWhere(['like', 'username', $this->username])->andFilterWhere(['like', 'user_password', $this->user_password]);
+        $query->andFilterWhere(['username' => $this->username]);
 
         return $dataProvider;
     }

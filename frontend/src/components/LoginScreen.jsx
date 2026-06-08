@@ -1,6 +1,6 @@
 function LoginForm({setData, confirm}) {
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         // Prevent the browser from reloading the page
         e.preventDefault();
 
@@ -10,7 +10,7 @@ function LoginForm({setData, confirm}) {
         // work with it as a plain object:
         const formJson = Object.fromEntries(formData.entries());
 
-        if (setData(formJson))
+        if (await setData(formJson))
             confirm()
     }
 
