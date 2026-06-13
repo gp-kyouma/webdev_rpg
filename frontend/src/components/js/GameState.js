@@ -1,74 +1,45 @@
+import Player from './Player';
+import Item from './Item';
+//import Battle from './Battle';
+import * as db from './DatabaseCRUD';
+import * as maputils from './MapUtils.js'
+
 export class GameState {
 
-    /*
-    (todo)
-
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    user_id INTEGER NOT NULL,
-
-    -- current floor data:
-    floor INTEGER NOT NULL,
-
-    -- map data
-    (pos)
-    map_data (map array) NOT NULL,
-    (view map)
-
-    -- shop data
-    shop1_id INTEGER DEFAULT NULL,
-    shop2_id INTEGER DEFAULT NULL,
-    shop3_id INTEGER DEFAULT NULL,
-    shop4_id INTEGER DEFAULT NULL,
-
-    -- chest data
-    chest_id INTEGER DEFAULT NULL,
-    is_mimic boolean NOT NULL,
-    (is active?)
-
-    -- boss data
-    boss_id INTEGER DEFAULT NULL,
-    boss_level INTEGER NOT NULL,
-    (is dead?)
-
-    -- player data:
-    (player class)
-
-    (battle class for in-battle data)
-    */
-    
     constructor() { // "empty" state
 
-        //todo, this is just copied from player
-        this.name = "";
+        this.id = 0
+        this.user_id = 0
 
-        this.current_hp = 0
-        this.current_mp = 0
+        this.floor = 0
 
-        this.max_hp = 0
-        this.max_mp = 0
+        this.pos = [0,0]
+        this.map_data = maputils.EmptyMap()
+        this.view_data = maputils.EmptyMap()
 
-        this.str = 0
-        this.def = 0
-        this.mag = 0
-        this.spd = 0
+        this.shop_items = []
 
-        this.exp = 0
-        this.lvl = 0
-        this.gold = 0
+        this.chest_item = null
+        this.chest_active = false
+        this.is_mimic = false
 
-        //these will be their own classes, use getters to get their ids when needed
-        this.class_id = 0
-        this.skill_id = 0
+        this.boss_id = null//in hindsight this should not be allowed to be null but shh
+        this.boss_level = 0
+        this.boss_defeated = false
 
-        this.weapon_id = null
-        this.armor_id = null
-        this.accessory_id = null
+        this.player = new Player//empty
 
-        this.item1_id = null
-        this.item2_id = null
-        this.item3_id = null
-        this.item4_id = null
+        this.battle = null
+
+        //possible things to add:
+        //cache of possible encounters on this floor? then i wouldn't need to query database every step
+        //bet
+        //probably just save handles here
+        this.encounter_table = []
+
+        this.log_ = null//function to add text to log
     }
+    //Todo soooooo much
     /*
     // Getter
     get area() {
