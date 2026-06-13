@@ -1,59 +1,50 @@
+import {_get} from './js/DatabaseCRUD';
+
 export class Skill {
-
-    /*
-    (todo)
-
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    handle varchar(20) UNIQUE NOT NULL, -- for access/reference, eg. 'SKILL_FIRE_1'
-
-    skill_name varchar(20) NOT NULL,          -- actual display name, eg. 'Fire'
-    skill_description varchar(50) NOT NULL,   -- flavortext
-
-    cost INTEGER NOT NULL,              -- mp cost (for players. enemies do not use mp)
-    effect varchar(50) NOT NULL,        -- json string
-    */
     
     constructor() { // "empty" skill
 
-        //todo, this is just copied from player
-        this.name = "";
+        this.id = 0
+        this.handle = ""
 
-        this.current_hp = 0
-        this.current_mp = 0
+        this.skill_name = ""
+        this.skill_description = ""
 
-        this.max_hp = 0
-        this.max_mp = 0
-
-        this.str = 0
-        this.def = 0
-        this.mag = 0
-        this.spd = 0
-
-        this.exp = 0
-        this.lvl = 0
-        this.gold = 0
-
-        //these will be their own classes, use getters to get their ids when needed
-        this.class_id = 0
-        this.skill_id = 0
-
-        this.weapon_id = null
-        this.armor_id = null
-        this.accessory_id = null
-
-        this.item1_id = null
-        this.item2_id = null
-        this.item3_id = null
-        this.item4_id = null
+        this.cost = 0
+        this.effect = {}
     }
-    /*
-    // Getter
-    get area() {
-        return this.calcArea();
+
+    async getFromDB(handle) {
+        const skilldata = await _get('skills', { handle: handle })
+        if (!skilldata || Array.isArray(skilldata) && skilldata.length === 0)
+        {
+            console.log("Skill with handle " + handle + " does not exist in database")
+            return
+        }
+        const skill = skilldata[0]
+        if (!skill)//just to be sure...
+        {
+            console.log("Skill with handle " + handle + " does not exist in database")
+            return
+        }
+
+        this.setFromSkillData(skill)
     }
-    // Method
-    calcArea() {
-        return this.height * this.width;
+
+    setFromSkillData(skill){
+        this.id = skill.id
+        this.handle = skill.handle //possibly redundant
+
+        this.skill_name = skill.skill_name
+        this.skill_description = skill.skill_description
+
+        this.cost = skill.cost
+
+        try {
+            this.effect = JSON.parse(skill.effect);
+        } catch (e) {
+            console.log(e)
+            this.effect = {};
+        }
     }
-    */
 }

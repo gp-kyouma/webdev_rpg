@@ -1,95 +1,126 @@
+import {_get} from './js/DatabaseCRUD';
+
 export class Class {
-
-    /*
-    (todo)
-
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    handle varchar(20) UNIQUE NOT NULL, -- for access/reference, eg. 'CLASS_WARRIOR'
-
-    class_name varchar(20) NOT NULL,          -- actual display name, eg. 'Warrior'
-    class_description varchar(50) NOT NULL,   -- flavortext
-
-    -- starting stats
-    hp INTEGER NOT NULL,
-    mp INTEGER NOT NULL,
-    str INTEGER NOT NULL,
-    def INTEGER NOT NULL,
-    mag INTEGER NOT NULL,
-    spd INTEGER NOT NULL,
-
-    -- stat growth per level up
-    hp_growth INTEGER NOT NULL,
-    mp_growth INTEGER NOT NULL,
-    str_growth INTEGER NOT NULL,
-    def_growth INTEGER NOT NULL,
-    mag_growth INTEGER NOT NULL,
-    spd_growth INTEGER NOT NULL,
-
-    -- skill/spell progression
-    -- 'skill_X' is learned at level X
-    -- if no change, just repeat last value
-    skill_1 varchar(20) NOT NULL,
-    skill_5 varchar(20) NOT NULL,
-    skill_10 varchar(20) NOT NULL,
-    skill_15 varchar(20) NOT NULL,
-    skill_20 varchar(20) NOT NULL,
-
-    -- 'default' weapon and armor types (used for loot generation)
-    weapon_type varchar(10) NOT NULL, -- 'SWORD' / 'STAFF' / and so on
-    armor_type varchar(10) NOT NULL,  -- 'LIGHT' / 'HEAVY' / and so on
-
-    -- starting items (can be null)
-    weapon varchar(20) DEFAULT NULL,
-    armor varchar(20) DEFAULT NULL,
-    accessory varchar(20) DEFAULT NULL,
-
-    item1 varchar(20) DEFAULT NULL,
-    item2 varchar(20) DEFAULT NULL,
-    item3 varchar(20) DEFAULT NULL,
-    item4 varchar(20) DEFAULT NULL,
-    */
     
     constructor() { // "empty" class
 
-        //todo, this is just copied from player
-        this.name = "";
+        this.id = 0
+        this.handle = ""
 
-        this.current_hp = 0
-        this.current_mp = 0
+        this.class_name = ""
+        this.class_description = ""
 
-        this.max_hp = 0
-        this.max_mp = 0
-
+        this.hp = 0
+        this.mp = 0
         this.str = 0
         this.def = 0
         this.mag = 0
         this.spd = 0
 
-        this.exp = 0
-        this.lvl = 0
-        this.gold = 0
+        this.hp_growth = 0
+        this.mp_growth = 0
+        this.str_growth = 0
+        this.def_growth = 0
+        this.mag_growth = 0
+        this.spd_growth = 0
 
-        //these will be their own classes, use getters to get their ids when needed
-        this.class_id = 0
-        this.skill_id = 0
+        this.weapon_type = ""
+        this.armor_type = ""
 
-        this.weapon_id = null
-        this.armor_id = null
-        this.accessory_id = null
+        // remaining attributes are handles
 
-        this.item1_id = null
-        this.item2_id = null
-        this.item3_id = null
-        this.item4_id = null
+        this.skills = {// access: skills[i]
+            1: "",
+            5: "",
+            10: "",
+            15: "",
+            20: ""
+        };
+
+        this.weapon = null
+        this.armor = null
+        this.accessory = null
+
+        this.items = []
     }
-    /*
+
+    async getFromDB(handle) {
+        const classdata = await _get('classes', { handle: handle })
+        if (!classdata || Array.isArray(classdata) && classdata.length === 0)
+        {
+            console.log("Class with handle " + handle + " does not exist in database")
+            return
+        }
+        const class_ = classdata[0]
+        if (!class_)//just to be sure...
+        {
+            console.log("Class with handle " + handle + " does not exist in database")
+            return
+        }
+
+        this.setFromClassData(class_)
+    }
+
+    setFromClassData(class_){
+        this.id = class_.id
+        this.handle = class_.handle //possibly redundant
+
+        this.class_name = class_.class_name
+        this.class_description = class_.class_description
+
+        this.hp = class_.hp
+        this.mp = class_.mp
+        this.str = class_.str
+        this.def = class_.def
+        this.mag = class_.mag
+        this.spd = class_.spd
+
+        this.hp_growth = class_.hp_growth
+        this.mp_growth = class_.mp_growth
+        this.str_growth = class_.str_growth
+        this.def_growth = class_.def_growth
+        this.mag_growth = class_.mag_growth
+        this.spd_growth = class_.spd_growth
+
+        this.weapon_type = class_.weapon_type
+        this.armor_type = class_.armor_type
+
+        // remaining attributes are handles
+
+        this.skills = {
+            1: class_.skill_1,
+            5: class_.skill_5,
+            10: class_.skill_10,
+            15: class_.skill_15,
+            20: class_.skill_20
+        };
+
+        // these handles can be null
+
+        if ("weapon" in class_ && class_.weapon) {
+            this.weapon = class_.weapon;
+        }
+
+        if ("armor" in class_ && class_.armor) {
+            this.armor = class_.armor;
+        }
+
+        if ("accessory" in class_ && class_.accessory) {
+            this.accessory = class_.accessory;
+        }
+        
+        this.items = []
+        for (let i = 1; i <= 4; i++)
+        {
+            const key = ("item"+i)
+            if (key in class_ && class_.key) {//will this work...
+                this.items.push(class_.key);
+            }
+        }
+    }
+
     // Getter
-    get area() {
-        return this.calcArea();
+    get hasStartingItems() {
+        return !(this.items?.length === 0);
     }
-    // Method
-    calcArea() {
-        return this.height * this.width;
-    }
-    */
 }

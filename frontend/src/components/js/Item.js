@@ -14,7 +14,7 @@ export class Item {
         this.gold_value = 0
         this.rarity = ""
         this.equipment = false //possibly redundant
-        this.effect = {}
+        this.effect = null
 
         // equipment-specific attributes
         this.equip_slot = null
@@ -60,7 +60,7 @@ export class Item {
             this.effect = JSON.parse(item.effect);
         } catch (e) {
             console.log(e)
-            this.effect = {};
+            this.effect = null;
         }
 
         if (item.equipment)
