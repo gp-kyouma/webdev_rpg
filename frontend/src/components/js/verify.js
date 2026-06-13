@@ -76,8 +76,6 @@ export function VerifyCharData(charData, setData){
     // If character name is empty, alert user
     // If character name is too long, alert user
 
-    // ...and that's kind of it for now.
-
     if (!charData.name || charData.name.trim().length === 0)
     {
         alert("Character name cannot be empty!")
@@ -91,6 +89,9 @@ export function VerifyCharData(charData, setData){
         alert("Character name is too long!")
         return false
     }
+
+    // Check if selected class exists in database
+    //TODO
 
     setData(charData)
     return true

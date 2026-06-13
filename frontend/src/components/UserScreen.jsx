@@ -33,9 +33,9 @@ function NewCharForm({setData, confirm, userID}) {
 
         <p>
             Class:
-            <label><input type="radio" name="class" value="warrior" defaultChecked={true} /> Warrior</label>
-            <label><input type="radio" name="class" value="magician" /> Magician</label>
-            <label><input type="radio" name="class" value="archer" /> Archer</label>
+            <label><input type="radio" name="class" value="CLASS_WARRIOR" defaultChecked={true} /> Warrior </label>
+            <label><input type="radio" name="class" value="CLASS_MAGICIAN" /> Magician </label>
+            <label><input type="radio" name="class" value="CLASS_THIEF" /> Thief </label>
         </p>
         <hr />
 

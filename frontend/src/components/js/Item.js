@@ -1,72 +1,113 @@
+import {_get} from './js/DatabaseCRUD';
+import { getRandomInt } from './utils';
+
 export class Item {
-
-    /*
-    (todo)
-
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    handle varchar(20) UNIQUE NOT NULL, -- for access/reference, eg. 'WPN_IRON_SWORD'
-
-    item_name varchar(20) NOT NULL,          -- actual display name, eg. 'Iron Sword'
-    item_description varchar(50) NOT NULL,   -- flavortext
-
-    gold_value INTEGER NOT NULL,
-    rarity varchar(10) NOT NULL,      -- 'COMMON', 'UNCOMMON', 'RARE', 'LEGENDARY'
-    equipment boolean NOT NULL,       -- if false then this item is a consumable
-    effect varchar(50) DEFAULT NULL,  -- relevant json string, to be parsed at relevant times
-
-    -- equipment-specific attributes
-    equip_slot varchar(10) DEFAULT NULL,    -- 'WEAPON' / 'ARMOR' / 'ACCESSORY'
-    equip_type varchar(10) DEFAULT NULL,    -- 'SWORD' / 'STAFF' / 'LIGHT' / 'HEAVY' / and so on
-
-    hp INTEGER DEFAULT NULL,
-    mp INTEGER DEFAULT NULL,
-    str INTEGER DEFAULT NULL,
-    def INTEGER DEFAULT NULL,
-    mag INTEGER DEFAULT NULL,
-    spd INTEGER DEFAULT NULL,
-    */
     
     constructor() { // "empty" item
 
-        //todo, this is just copied from player
-        this.name = "";
+        this.id = 0
+        this.handle = "" //possibly redundant
 
-        this.current_hp = 0
-        this.current_mp = 0
+        this.item_name = ""
+        this.item_description = ""
 
-        this.max_hp = 0
-        this.max_mp = 0
+        this.gold_value = 0
+        this.rarity = ""
+        this.equipment = false //possibly redundant
+        this.effect = {}
 
-        this.str = 0
-        this.def = 0
-        this.mag = 0
-        this.spd = 0
+        // equipment-specific attributes
+        this.equip_slot = null
+        this.equip_type = null
 
-        this.exp = 0
-        this.lvl = 0
-        this.gold = 0
-
-        //these will be their own classes, use getters to get their ids when needed
-        this.class_id = 0
-        this.skill_id = 0
-
-        this.weapon_id = null
-        this.armor_id = null
-        this.accessory_id = null
-
-        this.item1_id = null
-        this.item2_id = null
-        this.item3_id = null
-        this.item4_id = null
+        this.hp = null
+        this.mp = null
+        this.str = null
+        this.def = null
+        this.mag = null
+        this.spd = null
     }
-    /*
+
+    async getFromDB(handle) {
+        const itemdata = await _get('items', { handle: handle })
+        if (!itemdata || Array.isArray(itemdata) && itemdata.length === 0)
+        {
+            console.log("Item with handle " + handle + " does not exist in database")
+            return
+        }
+        const item = itemdata[0]
+        if (!item)//just to be sure...
+        {
+            console.log("Item with handle " + handle + " does not exist in database")
+            return
+        }
+
+        this.setFromItemData(item)
+    }
+
+    setFromItemData(item){
+        this.id = item.id
+        this.handle = item.handle //possibly redundant
+
+        this.item_name = item.item_name
+        this.item_description = item.item_description
+
+        this.gold_value = item.gold_value
+        this.rarity = item.rarity
+        this.equipment = item.equipment //possibly redundant
+
+        try {
+            this.effect = JSON.parse(item.effect);
+        } catch (e) {
+            console.log(e)
+            this.effect = {};
+        }
+
+        if (item.equipment)
+        {
+            // equipment-specific attributes
+            this.equip_slot = item.equip_slot
+            this.equip_type = item.equip_type
+
+            this.hp = item.hp
+            this.mp = item.mp
+            this.str = item.str
+            this.def = item.def
+            this.mag = item.mag
+            this.spd = item.spd
+        }
+    }
+
     // Getter
-    get area() {
-        return this.calcArea();
+    get has_effect() {
+        const isObjectEmpty = (obj) => {
+            return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
+        };
+
+        return !isObjectEmpty(this.effect);
     }
-    // Method
-    calcArea() {
-        return this.height * this.width;
+
+    static rollRarity(){
+        //const common_rarity     = 60//redundant
+        const uncommon_rarity   = 25
+        const rare_rarity       = 10
+        const legendary_rarity  = 5
+
+        let roll = getRandomInt(0, 100)
+
+        if (roll < legendary_rarity)
+            return "LEGENDARY"
+
+        roll =- legendary_rarity
+
+        if (roll < rare_rarity)
+            return "RARE"
+
+        roll =- rare_rarity
+
+        if (roll < uncommon_rarity)
+            return "UNCOMMON"
+
+        return "COMMON"
     }
-    */
 }
