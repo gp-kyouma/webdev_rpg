@@ -1,3 +1,8 @@
+import Class from './Class';
+import Skill from './Skill';
+import Item from './Item';
+import {_get} from './DatabaseCRUD';
+
 export class Player {
     
     constructor() { // "empty" player
@@ -19,20 +24,17 @@ export class Player {
         this.lvl = 0
         this.gold = 0
 
-        //these will be their own classes, use getters to get their ids when needed
-        //todo
-        this.class_id = 0
-        this.skill_id = 0
+        //unique classes
+        this.class = new Class//empty
+        this.skill_id = new Skill//empty
 
-        this.weapon_id = null
-        this.armor_id = null
-        this.accessory_id = null
+        this.weapon = null
+        this.armor = null
+        this.accessory = null
 
-        this.item1_id = null
-        this.item2_id = null
-        this.item3_id = null
-        this.item4_id = null
+        this.items = []
     }
+    //Todo the actual player stuff loading and such
     /*
     // Getter
     get area() {

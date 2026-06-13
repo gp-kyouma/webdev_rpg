@@ -1,4 +1,4 @@
-import {_get} from './js/DatabaseCRUD';
+import {_get} from './DatabaseCRUD';
 import { getRandomInt } from './utils';
 
 export class Item {
