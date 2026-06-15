@@ -16,7 +16,7 @@ function NewCharForm({setData, confirm, userID}) {
         // inject user id into the data that will be sent upwards
         formJson.user_id = userID
 
-        if (await VerifyCharData(formJson, setData)) //TODO, TRANSFORM THIS INTO A GAMEDATA
+        if (await VerifyCharData(formJson, setData))
             confirm()
     }
 

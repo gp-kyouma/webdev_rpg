@@ -40,40 +40,125 @@ export class GameState {
         this.log_ = null//function to add text to log
     }
 
-    //Todo soooooo much
-
-    async startGameState()
+    async startGameState(newCharData)
     {
-        //
+        this.id = 0
+        this.user_id = newCharData.user_id
+
+        this.floor = 1
+        this.generateNewFloor()
+
+        await this.player.startNewChar(newCharData)
+
+        //TODO
+        //create entry in gamestate database
+        //and then immediately read it
+        //and set this.id
+    }
+
+    setLogFunction(log_)
+    {
+        this.log_ = log_
     }
 
     async loadGameState()
     {
-        //
+        //TODO
     }
 
     saveGameState()
     {
-        //
+        //TODO
     }
 
     generateNewFloor()
     {
-        //
+        this.pos = [4,4]
+        this.map_data = maputils.GenerateMap(this.floor)
+        this.view_data = maputils.EmptyMap()
+        this.movePlayer('')
+
+        //TODO item generation
+        this.shop_items = []
+
+        //TODO chest generation
+        this.chest_item = null
+        this.chest_active = false
+        this.is_mimic = false
+
+        //TODO boss generation
+        this.boss_id = null
+        this.boss_level = 0
+        this.boss_defeated = false
+
+        //TODO all of this
+        this.encounter_table = []
     }
 
     movePlayer(direction)
     {
-        //
+        // basic movement test
+        let [x,y] = this.pos
+        switch (direction) {
+            case 'N':
+                y=y-1
+                break;
+        
+            case 'S':
+                y=y+1
+                break;
+
+            case 'E':
+                x=x+1
+                break;
+
+            case 'W':
+                x=x-1
+                break;
+            
+            default:
+                break;
+        }
+
+        if (y < 0 || y >= maputils.MapHeight)
+            return
+
+        if (x < 0 || x >= maputils.MapWidth)
+            return
+
+        if (this.map_data[y][x] == maputils.TileTypes.NONE)
+            return
+
+        this.view_data[y][x] = maputils.TileTypes.CURRENT
+
+        function updateAdjacentView(x,y){
+            if (this.map_data[y][x] != maputils.TileTypes.NONE){
+                if (this.view_data[y][x] == maputils.TileTypes.CURRENT)
+                    this.view_data[y][x] = maputils.TileTypes.VISITED
+                else if (this.view_data[y][x] == maputils.TileTypes.NONE)
+                    this.view_data[y][x] = maputils.TileTypes.UNKNOWN
+            }
+        }
+
+        if (x > 0) 
+            updateAdjacentView(x-1,y);
+        if (x < maputils.MapWidth-1) 
+            updateAdjacentView(x+1,y);
+        if (y > 0) 
+            updateAdjacentView(x,y-1);
+        if (y < maputils.MapHeight-1) 
+            updateAdjacentView(x,y+1);
+
+        this.pos = [x,y]
     }
 
     openChest()
     {
-        //
+        //TODO
     }
 
     fightBoss()
     {
-        //
+        //TODO
     }
 }

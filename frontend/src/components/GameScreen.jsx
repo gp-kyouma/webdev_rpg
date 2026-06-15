@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import Minimap from './Minimap';
-import * as maputils from './js/MapUtils.js'
 
 function Log({logData}) {
     
@@ -20,12 +19,15 @@ export default function GameScreen({data, setData, quit}) {
     const [log, setLog] = useState([]);
 
     //these will be replaced by a bigger "gamestate" structure
+    /*
     const [map, setMap] = useState([]);
     const [view, setView] = useState([]);
     const [pos, setPos] = useState([]);
+    */
 
-    const [init, setInit] = useState(false);//thejankers
+    //const [init, setInit] = useState(false);//thejankers
 
+    /*
     // basic movement test
     function move(map, view, pos, direction){
         let [x,y] = pos
@@ -93,11 +95,13 @@ export default function GameScreen({data, setData, quit}) {
         setMap(newmap)
         move(newmap, newview, newpos, '')
     }
+    */
 
     function addToLog(newText) {
         setLog([...log, newText]);
     }
 
+    /*
     if (!init)//thejankers
     {   
         // this *SHOULD...* only run once, on first render
@@ -112,12 +116,24 @@ export default function GameScreen({data, setData, quit}) {
 
         setInit(true)
     }
+    */
+
+    async function applyToData(method,params)
+    {
+        let newdata = structuredClone(data)
+        await newdata[method](params); //NO WAY THIS WORKS. NOOOOO FUCKING WAY
+        setData(newdata)
+    }
+
+    useEffect(() => {
+        applyToData("setLogFunction",addToLog);
+    }, []);
 
     return (
         <>
         <div class='parent flex-parent'>
             <Log logData = {log}/>
-            <Minimap mapData={map} viewData={view}/>
+            <Minimap mapData={data.map_data} viewData={data.view_data}/>
         </div>
 
         <h2>
@@ -133,31 +149,21 @@ export default function GameScreen({data, setData, quit}) {
         </h2>
 
         <div class="cross-container">
-            <button class="btn btn-top" type="button" onClick={() => move(map, view, pos, 'N')}>N</button>
+            <button class="btn btn-top" type="button" onClick={() => applyToData("movePlayer",'N')}>N</button>
             <br/>
-            <button class="btn btn-left" type="button" onClick={() => move(map, view, pos, 'W')}>W</button>
+            <button class="btn btn-left" type="button" onClick={() => applyToData("movePlayer",'W')}>W</button>
             <p class="btn-text btn-middle">
-                {pos[0]}, {pos[1]}
+                {data.pos[0]}, {data.pos[1]}
             </p>
-            <button class="btn btn-right" type="button" onClick={() => move(map, view, pos, 'E')}>E</button>
+            <button class="btn btn-right" type="button" onClick={() => applyToData("movePlayer",'E')}>E</button>
             <br/>
-            <button class="btn btn-bottom" type="button" onClick={() => move(map, view, pos, 'S')}>S</button>
+            <button class="btn btn-bottom" type="button" onClick={() => applyToData("movePlayer",'S')}>S</button>
         </div>
 
         <br/>
 
         <button type="button" onClick={() => addToLog("new line")}>
             add line to log
-        </button>
-
-        <br/>
-
-        <button type="button" onClick={() => NewMapReset(1)}>
-            generate new map (floor level 1)
-        </button>
-
-        <button type="button" onClick={() => NewMapReset(20)}>
-            generate new map (floor level 20)
         </button>
         </>
     );

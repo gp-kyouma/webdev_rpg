@@ -1,4 +1,5 @@
 import * as db from './DatabaseCRUD';
+import { GameState } from './GameState';
 
 function UserDataOK(userData){
     // Username is empty!
@@ -71,7 +72,7 @@ export async function VerifyUser(userData, setData){
     }
 }
 
-export function VerifyCharData(charData, setData){
+export async function VerifyCharData(charData, setData){
     // Verifies new character data
     // If character name is empty, alert user
     // If character name is too long, alert user
@@ -93,6 +94,8 @@ export function VerifyCharData(charData, setData){
     // Check if selected class exists in database
     //TODO
 
-    setData(charData)
+    let newChar = new GameState
+    await newChar.startGameState(charData)
+    setData(newChar)
     return true
 }
