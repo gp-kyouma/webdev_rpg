@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 
 import Minimap from './Minimap';
+import { TileTypes } from './js/MapUtils';
 
 function Log({logData}) {
     
@@ -21,6 +22,23 @@ function Log({logData}) {
     );
 }
 
+function MovementWidget({pos, apply}) {
+    
+    return (
+        <div class="cross-container">
+            <button class="btn btn-top" type="button" onClick={() => apply("movePlayer",'N')}>N</button>
+            <br/>
+            <button class="btn btn-left" type="button" onClick={() => apply("movePlayer",'W')}>W</button>
+            <p class="btn-text btn-middle">
+                {pos[0]}, {pos[1]}
+            </p>
+            <button class="btn btn-right" type="button" onClick={() => apply("movePlayer",'E')}>E</button>
+            <br/>
+            <button class="btn btn-bottom" type="button" onClick={() => apply("movePlayer",'S')}>S</button>
+        </div>
+    );
+}
+
 export default function GameScreen({data, setData, quit}) {
 
     const [log, setLog] = useState([]);
@@ -37,13 +55,38 @@ export default function GameScreen({data, setData, quit}) {
         setData(newdata)
     }
 
-    //LOG_ IS WORKING LOG_ IS WORKING GET HYPE
     useEffect(() => {
         let newdata = data.clone()
         newdata.log_ = (str) => { setLog(prev => [...prev, str]); }
         setData(newdata)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    let actionsScreen = null
+    if (data.battle){
+        //todo battle screen
+    }
+    else{
+        actionsScreen = <MovementWidget pos={data.pos} apply={applyToData}/>
+    }
+
+    let currentTileScreen = null
+    switch (data.currentTile) {
+        case TileTypes.TREASURE:
+            currentTileScreen = <p>large chest ahead (placeholder)</p>
+            //todo treasure screen
+            break;
+
+        case TileTypes.SHOP:
+            currentTileScreen = <p>lamp oil rope bombs you want it (placeholder)</p>
+            //todo treasure screen
+            break;
+
+        case TileTypes.BOSS:
+            currentTileScreen = <p>bossman (placeholder)</p>
+            //todo bossery
+            break;
+    }
 
     return (
         <>
@@ -56,17 +99,11 @@ export default function GameScreen({data, setData, quit}) {
         
         <br/><br/>
 
-        <div class="cross-container">
-            <button class="btn btn-top" type="button" onClick={() => applyToData("movePlayer",'N')}>N</button>
-            <br/>
-            <button class="btn btn-left" type="button" onClick={() => applyToData("movePlayer",'W')}>W</button>
-            <p class="btn-text btn-middle">
-                {data.pos[0]}, {data.pos[1]}
-            </p>
-            <button class="btn btn-right" type="button" onClick={() => applyToData("movePlayer",'E')}>E</button>
-            <br/>
-            <button class="btn btn-bottom" type="button" onClick={() => applyToData("movePlayer",'S')}>S</button>
-        </div>
+        {actionsScreen}
+
+        <br/>
+
+        {currentTileScreen}
 
         <br/>
 

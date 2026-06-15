@@ -166,6 +166,11 @@ export default class GameState {
         return true
     }
 
+    get currentTile(){
+        const [x,y] = this.pos
+        return this.map_data[y][x]
+    }
+
     openChest()
     {
         //TODO

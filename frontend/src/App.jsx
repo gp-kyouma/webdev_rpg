@@ -3,6 +3,7 @@ import './App.css'
 
 import StartScreen from './components/StartScreen';
 import GameScreen from './components/GameScreen';
+import GameState from './components/js/GameState';
 
 function App() {
 
@@ -10,7 +11,7 @@ function App() {
   const [userData, setUserData] = useState({});
   
   const [gameReady, isGameReady] = useState(false);
-  const [gameData, setGameData] = useState({});
+  const [gameData, setGameData] = useState(() => new GameState);
   
   let currentScreen;
   if (!gameReady){
