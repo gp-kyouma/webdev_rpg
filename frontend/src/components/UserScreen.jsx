@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import { VerifyCharData } from './js/verify';
 
-function NewCharForm({setData, confirm, userID}) {
+function NewCharForm({setData, confirm, userID, isSubmitting, setIsSubmitting}) {
 
     const defaultBtnText = "Create Character and Start Game"
     const [btnText, setbtnText] = useState(defaultBtnText);
-    const [isSubmitting, setIsSubmitting] = useState(false);
     
     async function handleSubmit(e) {
         // Prevent the browser from reloading the page
@@ -50,7 +49,7 @@ function NewCharForm({setData, confirm, userID}) {
         </p>
         <hr />
 
-        <button type="reset">Reset Character Data</button>
+        <button type="reset" disabled={isSubmitting}>Reset Character Data</button>
         <br/>
         <button type="submit" disabled={isSubmitting}>{btnText}</button>
         </form>
@@ -63,9 +62,11 @@ export default function UserScreen({ data, confirm, logOut, setData }) {
 
     const [mode, setMode] = useState(0);
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     // TODO: load user data (ongoing game, past scores)
 
-    let NewCharScreen = <NewCharForm setData={setData} confirm={() => confirm(true)} userID={data.id}/>
+    let NewCharScreen = <NewCharForm setData={setData} confirm={() => confirm(true)} userID={data.id} isSubmitting={isSubmitting} setIsSubmitting={setIsSubmitting}/>
     let LoadCharScreen = <p>TODO: Load Character and Start Game</p>
     let PastScoresScreen = <p>TODO: Table of Past Scores</p>
 
@@ -89,19 +90,19 @@ export default function UserScreen({ data, confirm, logOut, setData }) {
             <h2>
                 Welcome, {data.username}!
                 <br/>
-                <button type="button" onClick={() => logOut()} > Log Out </button>
+                <button type="button" onClick={() => logOut()} disabled={isSubmitting}> Log Out </button>
             </h2>
             <hr/>
 
-            <button type="button" onClick={() => setMode(0)} >
+            <button type="button" onClick={() => setMode(0)} disabled={isSubmitting}>
                 Start New Game
             </button>
 
-            <button type="button" onClick={() => setMode(1)} >
+            <button type="button" onClick={() => setMode(1)} disabled={isSubmitting}>
                 Continue Game
             </button>
 
-            <button type="button" onClick={() => setMode(2)} >
+            <button type="button" onClick={() => setMode(2)} disabled={isSubmitting}>
                 Show Past Scores
             </button>
 

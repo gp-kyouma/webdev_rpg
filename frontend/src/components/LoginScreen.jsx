@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { VerifyUser, RegisterUser } from "./js/verify";
 
 function LoginForm({setData, confirm}) {
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     async function handleSubmit(e) {
         // Prevent the browser from reloading the page
@@ -14,11 +17,15 @@ function LoginForm({setData, confirm}) {
 
         const buttonName = e.nativeEvent.submitter.name
 
+        setIsSubmitting(true)
+
         if (buttonName == "register")
             await RegisterUser(formJson)
         else if (buttonName == "login")
             if (await VerifyUser(formJson, setData))
                 confirm()
+
+        setIsSubmitting(false)
     }
 
     return (
@@ -32,8 +39,10 @@ function LoginForm({setData, confirm}) {
         <input name="user_password" type="password" placeholder="Password"/>
         <hr></hr>
 
-        <button type="submit" name="login">Login</button>
-        <button type="submit" name="register">Register</button>
+        <div style={{display: 'flex', gap: '60px'}}>
+            <button type="submit" name="login" disabled={isSubmitting}>Login</button>
+            <button type="submit" name="register" disabled={isSubmitting}>Register</button>
+        </div>
 
         </form>
 
