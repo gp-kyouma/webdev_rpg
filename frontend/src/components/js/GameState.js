@@ -94,6 +94,15 @@ export default class GameState {
 
         //TODO all of this
         this.encounter_table = []
+
+        //SAVES GAME TO DATABASE!
+    }
+
+    goNextFloor()
+    {
+        this.floor++
+        this.addToLog("Moving to floor " + this.floor + "...")
+        this.generateNewFloor()
     }
 
     movePlayer(direction)
@@ -157,11 +166,13 @@ export default class GameState {
 
         this.pos = [x,y]
 
-        // if is a standard tile, random chance to start encounter
-        //TODO
-
         if (direction != '')
             this.addToLog("You moved "+dirFull+".")
+
+        // if is a standard tile, random chance to start encounter
+        //TODO
+        // else if is a special tile, add relevant line to log
+        //TODO
 
         return true
     }
@@ -179,6 +190,27 @@ export default class GameState {
     fightBoss()
     {
         //TODO
+    }
+
+    doBattleAction(action)
+    {
+        //TODO
+        //something along the lines of:
+        //this.battle.doPlayerAction(action)
+        //if battle ongoing, do enemy action
+        //switch (this.battle.state){
+        //case won: etc
+        //case died: etc
+        //case escaped: etc
+        //}
+        //and so on
+    }
+
+    //debug, remove later
+    doKillBoss()
+    {
+        this.boss_defeated = true
+        this.addToLog("You destroyed the boss enemy (which does not exist) with your powers (which also do not exist).")
     }
 
     //cloning business.

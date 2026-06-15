@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react';
 import Minimap from './Minimap';
 import { TileTypes } from './js/MapUtils';
 
+import BossRoomScreen from './BossRoomScreen';
+
 function Log({logData}) {
     
     const messagesEndRef = useRef(null);
@@ -79,11 +81,11 @@ export default function GameScreen({data, setData, quit}) {
 
         case TileTypes.SHOP:
             currentTileScreen = <p>lamp oil rope bombs you want it (placeholder)</p>
-            //todo treasure screen
+            //todo shop screen
             break;
 
         case TileTypes.BOSS:
-            currentTileScreen = <p>bossman (placeholder)</p>
+            currentTileScreen = <BossRoomScreen data={data} apply={applyToData}/>
             //todo bossery
             break;
     }
