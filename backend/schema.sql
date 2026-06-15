@@ -305,8 +305,8 @@ INSERT INTO LoginUsers (username, user_password) VALUES
 ('JOHN TEST','123456'), ('JIMMY TEST','123ABC');
 
 INSERT INTO Scores (user_id, gameover_time, char_name, floor, total_exp, final_level, total_value) VALUES
-(1, CURRENT_TIMESTAMP, 'Jim John', 3, 33, 4, 5000),
-(1, CURRENT_TIMESTAMP, 'Mage #64.5', 5, 51, 5, 10000),
-(2, CURRENT_TIMESTAMP, 'Broke Guy', 1, 10, 2, 250);
+(1, CURRENT_TIMESTAMP, 'Jim John', 6, 530, 4, 5000),
+(1, CURRENT_TIMESTAMP, 'Mage #64.5', 5, 251, 5, 10000),
+(2, CURRENT_TIMESTAMP, 'Broke Guy', 7, 310, 2, 250);
 
 -- todo: preset gamestate

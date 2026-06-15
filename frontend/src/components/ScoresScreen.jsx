@@ -1,6 +1,21 @@
 import { useState, useEffect } from 'react';
 import * as db from './js/DatabaseCRUD';
 
+function SortableHeader({ onSort, label, classtype = '' }) {
+  const [cor, setCor] = useState('black');
+
+  return (
+    <th 
+        onMouseEnter={() => setCor('blue')} 
+        onMouseLeave={() => setCor('black')}
+        style={{ color: cor, fontWeight: 'bold' }}
+        onClick={onSort} class={classtype}
+        title={"Click to sort table by " + label}>
+        {label}
+    </th>
+  );
+}
+
 export default function ScoresScreen() {
 
     const [scores, setScores] = useState([]);
@@ -10,6 +25,14 @@ export default function ScoresScreen() {
         setScores(data);
     };
 
+    function onSort(key){
+        
+        const data = structuredClone(scores);
+        data.sort((a,b) => b[key] - a[key])//descending
+
+        setScores(data)
+    }
+
     useEffect(() => {
         const fetchScores = async () => { await getScores(); };
         fetchScores();
@@ -18,19 +41,28 @@ export default function ScoresScreen() {
     return (
         <>
             <hr/>
-
-            // this should be a pretty table. todo.<br/>
-            // this component is mostly todo actually<br/>
-            // sortable tables etc<br/>
-
-            {scores.map(score => (
-                <div key={score.id} class="">
-                    <p class="">
-                        <strong>Name:</strong> {score.char_name} | <strong>Floor:</strong> {score.floor} | <strong>EXP:</strong> {score.total_exp} | <strong>Total gold value:</strong> {score.total_value}
-                    </p>
-                </div>
-                ))
-            }
+            <table class='score-table'>
+                <thead>
+                    <tr>
+                        <th class='edge-left'>Character Name</th>
+                        <SortableHeader onSort={() => onSort('floor')} label="Floor"/>
+                        <SortableHeader onSort={() => onSort('total_exp')} label="EXP"/>
+                        <SortableHeader onSort={() => onSort('total_value')} label="Total gold value" classtype='edge-right'/>
+                    </tr>
+                </thead>
+                <tbody>
+                    {scores.map(function(score) {
+                            return (
+                            <tr key={score.id} data-item={score}>
+                                <td data-title="Name" class='edge-left'>{score.char_name}</td>
+                                <td data-title="Floor">{score.floor}</td>
+                                <td data-title="EXP">{score.total_exp}</td>
+                                <td data-title="Value" class='edge-right'>{score.total_value}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
         </>
     );
 }

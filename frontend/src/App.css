@@ -125,6 +125,23 @@
   grid-row: 2;
 }
 
+.score-table th,td {
+  border-bottom: 1px solid #ddd;
+  border-top: 1px solid #ddd;
+  padding: 5px;
+}
+
+.edge-left {
+  border-left: 1px solid #ddd;
+}
+.edge-right {
+  border-right: 1px solid #ddd;
+}
+
+.score-table td:nth-child(odd), th:nth-child(odd) {
+  background-color: #eeeeee;
+}
+
 .parent {
   padding: 1rem
 }
