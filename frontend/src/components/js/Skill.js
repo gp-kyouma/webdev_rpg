@@ -53,4 +53,13 @@ export default class Skill {
             this.effect = {};
         }
     }
+
+    //cloning business.
+    clone() {
+
+        // Deeply clone the internal data, then reconstruct the class
+        let clonedSkill = structuredClone(this);
+
+        return Object.setPrototypeOf(clonedSkill, Skill.prototype);
+    }
 }

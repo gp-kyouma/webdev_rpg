@@ -129,4 +129,13 @@ export default class Class {
     get hasStartingItems() {
         return !(this.items?.length === 0);
     }
+
+    //cloning business.
+    clone() {
+
+        // Deeply clone the internal data, then reconstruct the class
+        let clonedClass = structuredClone(this);
+
+        return Object.setPrototypeOf(clonedClass, Class.prototype);
+    }
 }

@@ -143,4 +143,39 @@ export default class Player {
     get hasAccessory() {
         return !(this.accessory == null);
     }
+    get hasItems() {
+        return !(this.items?.length === 0);
+    }
+
+    //cloning business.
+    clone() {
+
+        // Deeply clone the internal data, then reconstruct the class
+        let clonedPlayer = structuredClone(this);
+
+        clonedPlayer.class = this.class.clone()
+        clonedPlayer.skill = this.skill.clone()
+
+        if (this.hasWeapon) {
+            clonedPlayer.weapon = this.weapon.clone()
+        }
+
+        if (this.hasArmor) {
+            clonedPlayer.armor = this.armor.clone()
+        }
+
+        if (this.hasAccessory) {
+            clonedPlayer.accessory = this.accessory.clone()
+        }
+
+        if (this.hasItems) {
+            clonedPlayer.items = []
+            for (let i = 0; i < this.items.length; i++)
+            {
+                clonedPlayer.items.push(this.items[i].clone())
+            }
+        }
+
+        return Object.setPrototypeOf(clonedPlayer, Player.prototype);
+    }
 }

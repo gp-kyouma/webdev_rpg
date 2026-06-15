@@ -37,7 +37,7 @@ export default class GameState {
         //probably just save handles here
         this.encounter_table = []
 
-        this.log_ = null//function to add text to log
+        //this.log_ = null//function to add text to log
     }
 
     async startGameState(newCharData)
@@ -56,10 +56,12 @@ export default class GameState {
         //and set this.id
     }
 
+    /*
     setLogFunction(log_)
     {
         this.log_ = log_
     }
+    */
 
     async loadGameState()
     {
@@ -121,13 +123,13 @@ export default class GameState {
         }
 
         if (y < 0 || y >= maputils.MapHeight)
-            return
+            return false
 
         if (x < 0 || x >= maputils.MapWidth)
-            return
+            return false
 
         if (this.map_data[y][x] == maputils.TileTypes.NONE)
-            return
+            return false
 
         this.view_data[y][x] = maputils.TileTypes.CURRENT
 
@@ -150,6 +152,7 @@ export default class GameState {
             updateAdjacentView(this.map_data,this.view_data,x,y+1);
 
         this.pos = [x,y]
+        return true
     }
 
     openChest()
@@ -160,5 +163,26 @@ export default class GameState {
     fightBoss()
     {
         //TODO
+    }
+
+    //cloning business.
+    clone() {
+        //switcheroo
+        //const logfunc = this.log_
+        //this.log_ = null
+
+        // Deeply clone the internal data, then reconstruct the class
+        let clonedData = structuredClone(this);
+        let clonedPlayer = this.player.clone();
+
+        clonedData.player = clonedPlayer;
+        //clonedData.log_ = logfunc;
+
+        //todo attributes
+        //shop_items
+        //chest_item
+        //battle
+
+        return Object.setPrototypeOf(clonedData, GameState.prototype);
     }
 }

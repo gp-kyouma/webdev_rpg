@@ -3,6 +3,10 @@ import { VerifyCharData } from './js/verify';
 
 function NewCharForm({setData, confirm, userID}) {
 
+    const defaultBtnText = "Create Character and Start Game"
+    const [btnText, setbtnText] = useState(defaultBtnText);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    
     async function handleSubmit(e) {
         // Prevent the browser from reloading the page
         e.preventDefault();
@@ -16,8 +20,15 @@ function NewCharForm({setData, confirm, userID}) {
         // inject user id into the data that will be sent upwards
         formJson.user_id = userID
 
+        setbtnText("Creating...")
+        setIsSubmitting(true)
+
         if (await VerifyCharData(formJson, setData))
             confirm()
+        else
+            setbtnText(defaultBtnText)
+
+        setIsSubmitting(false)
     }
 
     return (
@@ -41,7 +52,7 @@ function NewCharForm({setData, confirm, userID}) {
 
         <button type="reset">Reset Character Data</button>
         <br/>
-        <button type="submit">Create Character and Start Game</button>
+        <button type="submit" disabled={isSubmitting}>{btnText}</button>
         </form>
 
         </>

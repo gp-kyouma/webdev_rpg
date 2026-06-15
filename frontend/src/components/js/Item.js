@@ -116,4 +116,13 @@ export default class Item {
 
         return "COMMON"
     }
+
+    //cloning business.
+    clone() {
+
+        // Deeply clone the internal data, then reconstruct the class
+        let clonedItem = structuredClone(this);
+
+        return Object.setPrototypeOf(clonedItem, Item.prototype);
+    }
 }
