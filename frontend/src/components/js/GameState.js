@@ -36,8 +36,6 @@ export default class GameState {
         //bet
         //probably just save handles here
         this.encounter_table = []
-
-        //this.log_ = null//function to add text to log
     }
 
     async startGameState(newCharData)
@@ -55,13 +53,6 @@ export default class GameState {
         //and then immediately read it
         //and set this.id
     }
-
-    /*
-    setLogFunction(log_)
-    {
-        this.log_ = log_
-    }
-    */
 
     async loadGameState()
     {
@@ -152,6 +143,10 @@ export default class GameState {
             updateAdjacentView(this.map_data,this.view_data,x,y+1);
 
         this.pos = [x,y]
+
+        // if is a standard tile, random chance to start encounter
+        //TODO
+
         return true
     }
 
@@ -167,16 +162,9 @@ export default class GameState {
 
     //cloning business.
     clone() {
-        //switcheroo
-        //const logfunc = this.log_
-        //this.log_ = null
-
         // Deeply clone the internal data, then reconstruct the class
         let clonedData = structuredClone(this);
-        let clonedPlayer = this.player.clone();
-
-        clonedData.player = clonedPlayer;
-        //clonedData.log_ = logfunc;
+        clonedData.player = this.player.clone();
 
         //todo attributes
         //shop_items

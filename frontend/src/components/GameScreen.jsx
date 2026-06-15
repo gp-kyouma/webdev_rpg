@@ -1,14 +1,21 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import Minimap from './Minimap';
 
 function Log({logData}) {
+    
+    const messagesEndRef = useRef(null);
+    const scrollToBottom = () => {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth", block: 'nearest', inline: 'start' });
+    };
+    useEffect(scrollToBottom, [logData]);
     
     return (
         <div class='child flex-child'>
             <p></p>
             <ul class="scroll-list">
                 {logData.map(i => <li>{i}</li>)}
+                <li ref={messagesEndRef} />
             </ul>
         </div>
     );
@@ -42,10 +49,11 @@ export default function GameScreen({data, setData, quit}) {
         setData(newdata)
     }
 
-    /* i would Really like log_ to work, actually...
+    //log_ attribute is just not gonna happen i think
+    /*
     useEffect(() => {
         let newdata = data.clone()//pls
-        newdata.setLogFunction(addToLog)
+        //newdata.log_ = (str) => addToLog(str)
         setData(newdata)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -76,9 +84,6 @@ export default function GameScreen({data, setData, quit}) {
 
         <br/>
 
-        <button type="button" onClick={() => addToLog("new line")}>
-            add line to log
-        </button>
         <br/>
         hello i am a placeholder here is my data from start screen: 
         <br/>
