@@ -44,8 +44,14 @@ export class Class {
         this.items = []
     }
 
-    async getFromDB(handle) {
-        const classdata = await _get('classes', { handle: handle })
+    async getFromDB(handle, useID = false) {
+        let search_term;
+        if (useID)
+            search_term = { id: handle }
+        else
+            search_term = { handle: handle }
+
+        const classdata = await _get('classes', search_term)
         if (!classdata || Array.isArray(classdata) && classdata.length === 0)
         {
             console.log("Class with handle " + handle + " does not exist in database")
@@ -113,8 +119,8 @@ export class Class {
         for (let i = 1; i <= 4; i++)
         {
             const key = ("item"+i)
-            if (key in class_ && class_.key) {//will this work...
-                this.items.push(class_.key);
+            if (key in class_ && class_[key]) {//will this work...
+                this.items.push(class_[key]);
             }
         }
     }

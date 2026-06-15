@@ -14,8 +14,14 @@ export class Skill {
         this.effect = {}
     }
 
-    async getFromDB(handle) {
-        const skilldata = await _get('skills', { handle: handle })
+    async getFromDB(handle, useID = false) {
+        let search_term;
+        if (useID)
+            search_term = { id: handle }
+        else
+            search_term = { handle: handle }
+
+        const skilldata = await _get('skills', search_term)
         if (!skilldata || Array.isArray(skilldata) && skilldata.length === 0)
         {
             console.log("Skill with handle " + handle + " does not exist in database")

@@ -39,15 +39,41 @@ export class GameState {
 
         this.log_ = null//function to add text to log
     }
+
     //Todo soooooo much
-    /*
-    // Getter
-    get area() {
-        return this.calcArea();
+
+    async startGameState()
+    {
+        //
     }
-    // Method
-    calcArea() {
-        return this.height * this.width;
+
+    async loadGameState()
+    {
+        //
     }
-    */
+
+    saveGameState()
+    {
+        //
+    }
+
+    generateNewFloor()
+    {
+        //
+    }
+
+    movePlayer(direction)
+    {
+        //
+    }
+
+    openChest()
+    {
+        //
+    }
+
+    fightBoss()
+    {
+        //
+    }
 }

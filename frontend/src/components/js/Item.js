@@ -28,8 +28,14 @@ export class Item {
         this.spd = null
     }
 
-    async getFromDB(handle) {
-        const itemdata = await _get('items', { handle: handle })
+    async getFromDB(handle, useID = false) {
+        let search_term;
+        if (useID)
+            search_term = { id: handle }
+        else
+            search_term = { handle: handle }
+
+        const itemdata = await _get('items', search_term)
         if (!itemdata || Array.isArray(itemdata) && itemdata.length === 0)
         {
             console.log("Item with handle " + handle + " does not exist in database")
