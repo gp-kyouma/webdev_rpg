@@ -64,6 +64,14 @@ export default class GameState {
         //TODO
     }
 
+    addToLog(str)
+    {
+        if (this.log_)
+            this.log_(str)
+        else
+            console.log("Log function not set (str was " + str + ")")
+    }
+
     generateNewFloor()
     {
         this.pos = [4,4]
@@ -92,21 +100,26 @@ export default class GameState {
     {
         // basic movement test
         let [x,y] = this.pos
+        let dirFull = ""
         switch (direction) {
             case 'N':
                 y=y-1
+                dirFull = "North"
                 break;
         
             case 'S':
                 y=y+1
+                dirFull = "South"
                 break;
 
             case 'E':
                 x=x+1
+                dirFull = "East"
                 break;
 
             case 'W':
                 x=x-1
+                dirFull = "West"
                 break;
             
             default:
@@ -147,6 +160,9 @@ export default class GameState {
         // if is a standard tile, random chance to start encounter
         //TODO
 
+        if (direction != '')
+            this.addToLog("You moved "+dirFull+".")
+
         return true
     }
 
@@ -163,7 +179,25 @@ export default class GameState {
     //cloning business.
     clone() {
         // Deeply clone the internal data, then reconstruct the class
-        let clonedData = structuredClone(this);
+
+        //this entire thing could be a 1 liner if it wasn't for the log_ function
+        //i gave it my all for the log_ function
+        let functions = {};
+        let data = {};
+
+        for (const [key, value] of Object.entries(this)) {
+            if (typeof value === "function") {
+                functions[key] = value;
+            } else {
+                data[key] = value;
+            }
+        }
+
+        let clonedData = structuredClone(data);
+
+        Object.assign(clonedData, functions);
+
+        //manually clone and assign the attributes that are classes
         clonedData.player = this.player.clone();
 
         //todo attributes
