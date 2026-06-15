@@ -4,7 +4,7 @@ import Item from './Item';
 import * as db from './DatabaseCRUD';
 import * as maputils from './MapUtils.js'
 
-export class GameState {
+export default class GameState {
 
     constructor() { // "empty" state
 
@@ -131,23 +131,23 @@ export class GameState {
 
         this.view_data[y][x] = maputils.TileTypes.CURRENT
 
-        function updateAdjacentView(x,y){
-            if (this.map_data[y][x] != maputils.TileTypes.NONE){
-                if (this.view_data[y][x] == maputils.TileTypes.CURRENT)
-                    this.view_data[y][x] = maputils.TileTypes.VISITED
-                else if (this.view_data[y][x] == maputils.TileTypes.NONE)
-                    this.view_data[y][x] = maputils.TileTypes.UNKNOWN
+        function updateAdjacentView(map,view,x,y){
+            if (map[y][x] != maputils.TileTypes.NONE){
+                if (view[y][x] == maputils.TileTypes.CURRENT)
+                    view[y][x] = maputils.TileTypes.VISITED
+                else if (view[y][x] == maputils.TileTypes.NONE)
+                    view[y][x] = maputils.TileTypes.UNKNOWN
             }
         }
 
         if (x > 0) 
-            updateAdjacentView(x-1,y);
+            updateAdjacentView(this.map_data,this.view_data,x-1,y);
         if (x < maputils.MapWidth-1) 
-            updateAdjacentView(x+1,y);
+            updateAdjacentView(this.map_data,this.view_data,x+1,y);
         if (y > 0) 
-            updateAdjacentView(x,y-1);
+            updateAdjacentView(this.map_data,this.view_data,x,y-1);
         if (y < maputils.MapHeight-1) 
-            updateAdjacentView(x,y+1);
+            updateAdjacentView(this.map_data,this.view_data,x,y+1);
 
         this.pos = [x,y]
     }

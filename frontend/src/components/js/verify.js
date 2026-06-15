@@ -1,5 +1,5 @@
 import * as db from './DatabaseCRUD';
-import { GameState } from './GameState';
+import GameState from './GameState';
 
 function UserDataOK(userData){
     // Username is empty!
@@ -92,7 +92,14 @@ export async function VerifyCharData(charData, setData){
     }
 
     // Check if selected class exists in database
-    //TODO
+    let chosenclass = await db._get('classes', {handle: charData.class});
+    chosenclass = chosenclass[0]//because get returns an array
+
+    if (!chosenclass)
+    {
+        alert("Class \"" + charData.class + "\" is not implemented yet!\n:(")
+        return false
+    }
 
     let newChar = new GameState
     await newChar.startGameState(charData)

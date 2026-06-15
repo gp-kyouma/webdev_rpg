@@ -2,7 +2,7 @@ import Class from './Class';
 import Skill from './Skill';
 import Item from './Item';
 
-export class Player {
+export default class Player {
     
     constructor() { // "empty" player
 

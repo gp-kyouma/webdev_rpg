@@ -1,6 +1,6 @@
 import {_get} from './DatabaseCRUD';
 
-export class Class {
+export default class Class {
     
     constructor() { // "empty" class
 

@@ -275,6 +275,30 @@ CREATE TABLE IF NOT EXISTS Scores (
 -- INSERÇÃO DE DADOS INICIAIS (SEEDS)
 -- ==========================================================
 
+INSERT INTO Items
+(handle,                item_name,      item_description,           gold_value, rarity,   equipment,  effect,       equip_slot, equip_type, hp, mp, str,  def,  mag,  spd) VALUES
+('WPN_TEST_SWORD',      'Test Sword',   'A placeholder weapon',     103,        'COMMON', true,       '{}',         'WEAPON',   'SWORD',    0,  0,  10,   0,    0,    0),
+('ARM_TEST_ARMOR',      'Test Armor',   'A placeholder armor',      125,        'COMMON', true,       '{}',         'ARMOR',    'MEDIUM',   0,  0,  0,    10,   0,    0),
+('ACC_TEST_ACCESSORY',  'Test Bangle',  'A placeholder accessory',  221,        'COMMON', true,       "{'test':true}",'ACCESSORY','BANGLE',   10, 10, 0,    0,    10,   0);
+
+INSERT INTO Skills
+(handle,        skill_name,         skill_description,      cost, effect) VALUES
+('SKILL_TEST',  'Twiddle Thumbs',   'A placeholder skill',  1,    "{'test':true}");
+
+INSERT INTO Classes
+(handle,    class_name, class_description,            
+hp,         mp,         str,        def,        mag,        spd,
+hp_growth,  mp_growth,  str_growth, def_growth, mag_growth, spd_growth, 
+skill_1,    skill_5,    skill_10,   skill_15,   skill_20,     
+weapon_type,  armor_type, 
+weapon,       armor,      accessory) VALUES
+('CLASS_WARRIOR', 'Warrior',  'A placeholder description',  
+100,  20, 50, 30, 10, 20,   
+10,   3,  5,  4,  3,  4,          
+'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 
+'SWORD',  'MEDIUM',   
+'WPN_TEST_SWORD', 'ARM_TEST_ARMOR', 'ACC_TEST_ACCESSORY');
+
 -- todo: insert into fixed tables
 
 INSERT INTO LoginUsers (username, user_password) VALUES 

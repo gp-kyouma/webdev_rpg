@@ -1,7 +1,7 @@
 import {_get} from './DatabaseCRUD';
 import { getRandomInt } from './utils';
 
-export class Item {
+export default class Item {
     
     constructor() { // "empty" item
 
