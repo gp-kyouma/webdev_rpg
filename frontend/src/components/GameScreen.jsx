@@ -4,6 +4,7 @@ import Minimap from './Minimap';
 import { TileTypes } from './js/MapUtils';
 
 import BossRoomScreen from './BossRoomScreen';
+import GameState from './js/GameState';
 
 function Log({logData}) {
     
@@ -47,7 +48,10 @@ export default function GameScreen({data, setData, quit}) {
 
     function quitWithoutSaving(){
         if (confirm("Quit current game?\n(All progress made since the start of the floor will be lost)"))
+        {
+            setData(new GameState)
             quit()
+        }
     }
     
     async function applyToData(method,params)

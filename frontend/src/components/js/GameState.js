@@ -120,9 +120,41 @@ export default class GameState {
         this.id = entry.id
     }
 
-    async loadGameState()
+    async loadGameState(ongame)
     {
-        //TODO
+        this.id = ongame.id
+        this.user_id = ongame.user_id
+
+        this.floor = ongame.floor
+
+        this.pos = [4,4]
+        this.map_data = maputils.deserialize(ongame.map_data)
+        this.view_data = maputils.EmptyMap()
+        this.movePlayer('')
+
+        this.shop_items = []
+        for (let i = 1; i <= 4; i++)
+        {
+            const key = ("shop"+i+"_id")
+            if (key in ongame && ongame[key]) {//will this work...
+                let newItem = new Item
+                await newItem.getFromDB(ongame[key], true)
+                this.shop_items.push(newItem);
+            }
+        }
+
+        if ("chest_id" in ongame && ongame.chest_id) {
+            this.chest_item = new Item
+            await this.chest_item.getFromDB(ongame.chest_id, true);
+        }
+
+        this.is_mimic = !!ongame.is_mimic
+
+        if (ongame.boss_id)
+            this.boss_id = ongame.boss_id
+        this.boss_level = ongame.boss_level
+
+        await this.player.setFromGameState(ongame)
     }
 
     async saveGameState()

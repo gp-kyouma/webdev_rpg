@@ -72,7 +72,7 @@ export async function VerifyUser(userData, setData){
     }
 }
 
-export async function VerifyCharData(charData, setData){
+export async function VerifyCharData(charData, setData, ongame){
     // Verifies new character data
     // If character name is empty, alert user
     // If character name is too long, alert user
@@ -99,6 +99,17 @@ export async function VerifyCharData(charData, setData){
     {
         alert("Class \"" + charData.class + "\" is not implemented yet!\n:(")
         return false
+    }
+
+    //IF ONGOING GAME EXISTS, WARN USER
+    if (ongame != null)
+    {
+        if (confirm("You already have an ongoing game saved!\nDo you wish to delete that character and start a new game?"))
+        {
+            //delete existing entry
+            await db._delete('game-states',ongame.id)
+        }
+        else return false
     }
 
     let newChar = new GameState

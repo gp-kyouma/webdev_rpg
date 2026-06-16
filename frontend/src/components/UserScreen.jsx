@@ -1,7 +1,61 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { VerifyCharData } from './js/verify';
 
-function NewCharForm({setData, confirm, userID, isSubmitting, setIsSubmitting}) {
+import * as db from './js/DatabaseCRUD';
+import GameState from './js/GameState';
+
+function LoadGameScreen({ongame, setData, confirm, isSubmitting, setIsSubmitting}) {
+
+    const defaultBtnText = "Load Character and Continue Game"
+    const [btnText, setbtnText] = useState(defaultBtnText);
+    
+    async function loadGame() {
+        setbtnText("Loading...")
+        setIsSubmitting(true)
+
+        let newChar = new GameState
+        await newChar.loadGameState(ongame)
+        setData(newChar)
+        confirm()
+
+        setbtnText(defaultBtnText)
+        setIsSubmitting(false)
+    }
+
+    let loadscreen
+    if (ongame)
+    {
+        //show some game data
+        loadscreen = <>
+        Character name: {ongame.char_name}
+        <br/>
+        Class (ID): {ongame.class_id}//remove this later bru
+        <br/>
+        Current HP: {ongame.current_hp} / {ongame.max_hp}
+        <br/>
+        Current floor: {ongame.floor}
+        <br/>
+        todo put more info here?
+        <hr />
+        <button type="button" onClick={() => loadGame()} disabled={isSubmitting}> {btnText} </button>
+        </>
+    }
+    else
+    {
+        loadscreen = <p>(No ongoing game found!)</p>
+    }
+
+    return (
+        <>
+        <hr />
+
+        {loadscreen}
+
+        </>
+    );
+}
+
+function NewCharForm({ongame, setData, confirm, userID, isSubmitting, setIsSubmitting}) {
 
     const defaultBtnText = "Create Character and Start Game"
     const [btnText, setbtnText] = useState(defaultBtnText);
@@ -22,7 +76,7 @@ function NewCharForm({setData, confirm, userID, isSubmitting, setIsSubmitting}) 
         setbtnText("Creating...")
         setIsSubmitting(true)
 
-        if (await VerifyCharData(formJson, setData))
+        if (await VerifyCharData(formJson, setData, ongame))
             confirm()
         else
             setbtnText(defaultBtnText)
@@ -65,9 +119,27 @@ export default function UserScreen({ data, confirm, logOut, setData }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     // TODO: load user data (ongoing game, past scores)
+    const [ongoingGame, setOngoingGame] = useState(null);
+    
+    async function getOngoingGame() {
+        let ongame = await db._get('game-states',{user_id: data.id})
+        ongame = ongame[0]//because get returns an array
+        if (ongame)
+        {
+            setOngoingGame(ongame);
+        }
+    };
 
-    let NewCharScreen = <NewCharForm setData={setData} confirm={() => confirm(true)} userID={data.id} isSubmitting={isSubmitting} setIsSubmitting={setIsSubmitting}/>
-    let LoadCharScreen = <p>TODO: Load Character and Start Game</p>
+    useEffect(() => {
+        const fetchOngoingGame = async () => { await getOngoingGame(); };
+        fetchOngoingGame();
+        //also fetch this user's scores
+        //todo
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    let NewCharScreen = <NewCharForm setData={setData} confirm={() => confirm(true)} userID={data.id} isSubmitting={isSubmitting} setIsSubmitting={setIsSubmitting} ongame={ongoingGame}/>
+    let LoadCharScreen = <LoadGameScreen setData={setData} confirm={() => confirm(true)} isSubmitting={isSubmitting} setIsSubmitting={setIsSubmitting} ongame={ongoingGame}/>
     let PastScoresScreen = <p>TODO: Table of Past Scores</p>
 
     let currentScreen;
