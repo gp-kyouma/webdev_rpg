@@ -86,7 +86,6 @@ export default function GameScreen({data, setData, quit}) {
 
         case TileTypes.BOSS:
             currentTileScreen = <BossRoomScreen data={data} apply={applyToData}/>
-            //todo bossery
             break;
     }
 

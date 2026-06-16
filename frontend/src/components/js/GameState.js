@@ -38,6 +38,67 @@ export default class GameState {
         this.encounter_table = []
     }
 
+    prepareDatabaseEntry(){
+        let result = {}
+
+        result.user_id = this.user_id
+        result.floor = this.floor
+        result.map_data = maputils.serialize(this.map_data)
+
+        if (this.shop_items.length > 0)
+            for (let i = 1; i <= this.shop_items.length; i++)
+            {
+                const key = ("shop"+i+"_id")
+                result[key] = this.shop_items[i-1].id
+            }
+
+        if (this.chest_item)//this is only here because i haven't implemented chest item yet, remove later
+            result.chest_id = this.chest_item.id
+        result.is_mimic = this.is_mimic ? 1 : 0 // must be an integer lol?
+
+        result.boss_id = this.boss_id
+        result.boss_level = this.boss_level
+
+        // player data:
+        result.char_name = this.player.name
+
+        result.current_hp = this.player.current_hp
+        result.current_mp = this.player.current_mp
+
+        result.max_hp = this.player.max_hp
+        result.max_mp = this.player.max_mp
+
+        result.str = this.player.str
+        result.def = this.player.def
+        result.mag = this.player.mag
+        result.spd = this.player.spd
+
+        result.exp = this.player.exp
+        result.lvl = this.player.lvl
+        result.gold = this.player.gold
+
+        result.class_id = this.player.class.id
+        result.skill_id = this.player.skill.id
+
+        if (this.player.hasWeapon)
+            result.weapon_id = this.player.weapon.id
+
+        if (this.player.hasArmor)
+            result.armor_id = this.player.armor.id
+
+        if (this.player.hasAccessory)
+            result.accessory_id = this.player.accessory.id
+
+        if (this.player.hasItems)
+            for (let i = 1; i <= this.player.items.length; i++)
+            {
+                const key = ("item"+i+"_id")
+                result[key] = this.player.items[i-1].id
+            }
+
+        return result
+    }
+
     async startGameState(newCharData)
     {
         this.id = 0
@@ -48,10 +109,15 @@ export default class GameState {
 
         await this.player.startNewChar(newCharData)
 
-        //TODO
         //create entry in gamestate database
+        await db._create('game-states',this.prepareDatabaseEntry())
+
         //and then immediately read it
+        let entry = await db._get('game-states',{user_id:this.user_id})
+        entry = entry[0]
+
         //and set this.id
+        this.id = entry.id
     }
 
     async loadGameState()
@@ -59,9 +125,10 @@ export default class GameState {
         //TODO
     }
 
-    saveGameState()
+    async saveGameState()
     {
-        //TODO
+        await db._update('game-states',this.id,this.prepareDatabaseEntry())
+        this.addToLog("Game state saved!")
     }
 
     addToLog(str)
@@ -94,8 +161,6 @@ export default class GameState {
 
         //TODO all of this
         this.encounter_table = []
-
-        //SAVES GAME TO DATABASE!
     }
 
     goNextFloor()
@@ -103,6 +168,9 @@ export default class GameState {
         this.floor++
         this.addToLog("Moving to floor " + this.floor + "...")
         this.generateNewFloor()
+
+        //SAVES GAME TO DATABASE
+        this.saveGameState()
     }
 
     movePlayer(direction)
