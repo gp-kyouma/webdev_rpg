@@ -4,6 +4,28 @@ import { VerifyCharData } from './js/verify';
 import * as db from './js/DatabaseCRUD';
 import GameState from './js/GameState';
 
+import SortableScoresTable from './SortableScoresTable';
+
+function UserScoresScreen({scores, setScores}) {
+
+    let scoretable
+    if (scores.length === 0)
+    {
+        scoretable = <p>(No past scores found!)</p>
+    }
+    else
+    {
+        scoretable = <SortableScoresTable scores={scores} setScores={setScores}/>
+    }
+
+    return (
+        <>
+            <hr />
+            {scoretable}
+        </>
+    );
+}
+
 function LoadGameScreen({ongame, setData, confirm, isSubmitting, setIsSubmitting}) {
 
     const defaultBtnText = "Load Character and Continue Game"
@@ -29,7 +51,7 @@ function LoadGameScreen({ongame, setData, confirm, isSubmitting, setIsSubmitting
         loadscreen = <>
         Character name: {ongame.char_name}
         <br/>
-        Class (ID): {ongame.class_id}//remove this later bru
+        Class (ID): {ongame.class_id} //remove this later bru
         <br/>
         Current HP: {ongame.current_hp} / {ongame.max_hp}
         <br/>
@@ -118,8 +140,9 @@ export default function UserScreen({ data, confirm, logOut, setData }) {
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // TODO: load user data (ongoing game, past scores)
+    // load user data (ongoing game, past scores)
     const [ongoingGame, setOngoingGame] = useState(null);
+    const [userScores, setUserScores] = useState([]);
     
     async function getOngoingGame() {
         let ongame = await db._get('game-states',{user_id: data.id})
@@ -130,17 +153,23 @@ export default function UserScreen({ data, confirm, logOut, setData }) {
         }
     };
 
+    async function getUserScores() {
+        const scoredata = await db._get('scores', {user_id: data.id});
+        setUserScores(scoredata);
+    };
+
     useEffect(() => {
         const fetchOngoingGame = async () => { await getOngoingGame(); };
         fetchOngoingGame();
-        //also fetch this user's scores
-        //todo
+
+        const fetchUserScores = async () => { await getUserScores(); };
+        fetchUserScores();
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     let NewCharScreen = <NewCharForm setData={setData} confirm={() => confirm(true)} userID={data.id} isSubmitting={isSubmitting} setIsSubmitting={setIsSubmitting} ongame={ongoingGame}/>
     let LoadCharScreen = <LoadGameScreen setData={setData} confirm={() => confirm(true)} isSubmitting={isSubmitting} setIsSubmitting={setIsSubmitting} ongame={ongoingGame}/>
-    let PastScoresScreen = <p>TODO: Table of Past Scores</p>
+    let PastScoresScreen = <UserScoresScreen scores={userScores} setScores={setUserScores}/>
 
     let currentScreen;
     switch (mode) {
