@@ -106,6 +106,13 @@ function NewCharForm({ongame, setData, confirm, userID, isSubmitting, setIsSubmi
         setIsSubmitting(false)
     }
 
+    //TODO: SHOW CLASS INFO WHEN SELECTED
+    //ClassBanner(?) component
+    //on click radio button: search (preloaded) list of classes
+    //find the entry with handle=value
+    //and set state (which is input for ClassBanner)
+    //hmm.
+
     return (
         <>
 

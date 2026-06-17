@@ -65,8 +65,8 @@ class Items extends \yii\db\ActiveRecord
             [['effect', 'equip_slot', 'equip_type', 'hp', 'mp', 'str', 'def', 'mag', 'spd'], 'default', 'value' => null],
             [['handle', 'item_name', 'item_description', 'gold_value', 'rarity', 'equipment'], 'required'],
             [['gold_value', 'equipment', 'hp', 'mp', 'str', 'def', 'mag', 'spd'], 'integer'],
-            [['handle', 'item_name'], 'string', 'max' => 20],
-            [['item_description', 'effect'], 'string', 'max' => 50],
+            [['handle', 'item_name'], 'string', 'max' => 40],
+            [['item_description', 'effect'], 'string', 'max' => 100],
             [['rarity', 'equip_slot', 'equip_type'], 'string', 'max' => 10],
             [['handle'], 'unique'],
         ];

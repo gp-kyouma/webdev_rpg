@@ -50,7 +50,7 @@ class EnemyData extends \yii\db\ActiveRecord
             [['handle', 'enemy_name', 'is_boss', 'starting_floor', 'base_level', 'level_up_factor', 'hp', 'str', 'def', 'mag', 'spd', 'gold_dropped', 'exp_dropped'], 'required'],
             [['is_boss', 'starting_floor', 'stopping_floor', 'base_level', 'max_level', 'hp', 'str', 'def', 'mag', 'spd', 'gold_dropped', 'exp_dropped'], 'integer'],
             [['level_up_factor'], 'number'],
-            [['handle', 'enemy_name', 'skill'], 'string', 'max' => 20],
+            [['handle', 'enemy_name', 'skill'], 'string', 'max' => 40],
             [['handle'], 'unique'],
             [['skill'], 'exist', 'skipOnError' => true, 'targetClass' => Skills::class, 'targetAttribute' => ['skill' => 'handle']],
         ];

@@ -42,8 +42,8 @@ class Skills extends \yii\db\ActiveRecord
         return [
             [['handle', 'skill_name', 'skill_description', 'cost', 'effect'], 'required'],
             [['cost'], 'integer'],
-            [['handle', 'skill_name'], 'string', 'max' => 20],
-            [['skill_description', 'effect'], 'string', 'max' => 50],
+            [['handle', 'skill_name'], 'string', 'max' => 40],
+            [['skill_description', 'effect'], 'string', 'max' => 100],
             [['handle'], 'unique'],
         ];
     }

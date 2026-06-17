@@ -12,15 +12,15 @@ USE db_webrpg;
 CREATE TABLE IF NOT EXISTS Items (
   -- attributes common to all items
   id INTEGER NOT NULL AUTO_INCREMENT,
-  handle varchar(20) UNIQUE NOT NULL, -- for access/reference, eg. 'WPN_IRON_SWORD'
+  handle varchar(40) UNIQUE NOT NULL, -- for access/reference, eg. 'WPN_IRON_SWORD'
 
-  item_name varchar(20) NOT NULL,          -- actual display name, eg. 'Iron Sword'
-  item_description varchar(50) NOT NULL,   -- flavortext
+  item_name varchar(40) NOT NULL,          -- actual display name, eg. 'Iron Sword'
+  item_description varchar(100) NOT NULL,   -- flavortext
 
   gold_value INTEGER NOT NULL,
   rarity varchar(10) NOT NULL,      -- 'COMMON', 'UNCOMMON', 'RARE', 'LEGENDARY'
   equipment boolean NOT NULL,       -- if false then this item is a consumable
-  effect varchar(50) DEFAULT NULL,  -- relevant json string, to be parsed at relevant times
+  effect varchar(100) DEFAULT NULL,  -- relevant json string, to be parsed at relevant times
 
   -- equipment-specific attributes
   equip_slot varchar(10) DEFAULT NULL,    -- 'WEAPON' / 'ARMOR' / 'ACCESSORY'
@@ -40,13 +40,13 @@ CREATE TABLE IF NOT EXISTS Items (
 
 CREATE TABLE IF NOT EXISTS Skills (
   id INTEGER NOT NULL AUTO_INCREMENT,
-  handle varchar(20) UNIQUE NOT NULL, -- for access/reference, eg. 'SKILL_FIRE_1'
+  handle varchar(40) UNIQUE NOT NULL, -- for access/reference, eg. 'SKILL_FIRE_1'
 
-  skill_name varchar(20) NOT NULL,          -- actual display name, eg. 'Fire'
-  skill_description varchar(50) NOT NULL,   -- flavortext
+  skill_name varchar(40) NOT NULL,          -- actual display name, eg. 'Fire'
+  skill_description varchar(100) NOT NULL,   -- flavortext
 
   cost INTEGER NOT NULL,              -- mp cost (for players. enemies do not use mp)
-  effect varchar(50) NOT NULL,        -- json string
+  effect varchar(100) NOT NULL,        -- json string
 
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -55,10 +55,10 @@ CREATE TABLE IF NOT EXISTS Skills (
 
 CREATE TABLE IF NOT EXISTS Classes (
   id INTEGER NOT NULL AUTO_INCREMENT,
-  handle varchar(20) UNIQUE NOT NULL, -- for access/reference, eg. 'CLASS_WARRIOR'
+  handle varchar(40) UNIQUE NOT NULL, -- for access/reference, eg. 'CLASS_WARRIOR'
 
-  class_name varchar(20) NOT NULL,          -- actual display name, eg. 'Warrior'
-  class_description varchar(50) NOT NULL,   -- flavortext
+  class_name varchar(40) NOT NULL,          -- actual display name, eg. 'Warrior'
+  class_description varchar(100) NOT NULL,   -- flavortext
 
   -- starting stats
   hp INTEGER NOT NULL,
@@ -79,25 +79,25 @@ CREATE TABLE IF NOT EXISTS Classes (
   -- skill/spell progression
   -- 'skill_X' is learned at level X
   -- if no change, just repeat last value
-  skill_1 varchar(20) NOT NULL,
-  skill_5 varchar(20) NOT NULL,
-  skill_10 varchar(20) NOT NULL,
-  skill_15 varchar(20) NOT NULL,
-  skill_20 varchar(20) NOT NULL,
+  skill_1 varchar(40) NOT NULL,
+  skill_5 varchar(40) NOT NULL,
+  skill_10 varchar(40) NOT NULL,
+  skill_15 varchar(40) NOT NULL,
+  skill_20 varchar(40) NOT NULL,
 
   -- 'default' weapon and armor types (used for loot generation)
   weapon_type varchar(10) NOT NULL, -- 'SWORD' / 'STAFF' / and so on
   armor_type varchar(10) NOT NULL,  -- 'LIGHT' / 'HEAVY' / and so on
 
   -- starting items (can be null)
-  weapon varchar(20) DEFAULT NULL,
-  armor varchar(20) DEFAULT NULL,
-  accessory varchar(20) DEFAULT NULL,
+  weapon varchar(40) DEFAULT NULL,
+  armor varchar(40) DEFAULT NULL,
+  accessory varchar(40) DEFAULT NULL,
 
-  item1 varchar(20) DEFAULT NULL,
-  item2 varchar(20) DEFAULT NULL,
-  item3 varchar(20) DEFAULT NULL,
-  item4 varchar(20) DEFAULT NULL,
+  item1 varchar(40) DEFAULT NULL,
+  item2 varchar(40) DEFAULT NULL,
+  item3 varchar(40) DEFAULT NULL,
+  item4 varchar(40) DEFAULT NULL,
 
   -- table references
   -- (not sure how useful they would be in this scenario exactly but do them anyway)
@@ -122,9 +122,9 @@ CREATE TABLE IF NOT EXISTS Classes (
 
 CREATE TABLE IF NOT EXISTS EnemyData (
   id INTEGER NOT NULL AUTO_INCREMENT,
-  handle varchar(20) UNIQUE NOT NULL, -- for access/reference, eg. 'ENEMY_GIANT_RAT'
+  handle varchar(40) UNIQUE NOT NULL, -- for access/reference, eg. 'ENEMY_GIANT_RAT'
 
-  enemy_name varchar(20) NOT NULL,    -- actual display name, eg. 'Giant Rat'
+  enemy_name varchar(40) NOT NULL,    -- actual display name, eg. 'Giant Rat'
 
   is_boss boolean NOT NULL,
   starting_floor INTEGER NOT NULL, -- first floor where this enemy appears
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS EnemyData (
   mag INTEGER NOT NULL,
   spd INTEGER NOT NULL,
 
-  skill varchar(20),
+  skill varchar(40),
 
   gold_dropped INTEGER NOT NULL,
   exp_dropped INTEGER NOT NULL,
@@ -275,38 +275,153 @@ CREATE TABLE IF NOT EXISTS Scores (
 -- INSERÇÃO DE DADOS INICIAIS (SEEDS)
 -- ==========================================================
 
+-- Items (weapons)
 INSERT INTO Items
-(handle,                item_name,      item_description,           gold_value, rarity,   equipment,  effect,           equip_slot, equip_type, hp, mp, str,  def,  mag,  spd) VALUES
-('WPN_TEST_SWORD',      'Test Sword',   'A placeholder weapon',     103,        'COMMON', true,       '{}',             'WEAPON',   'SWORD',    0,  0,  10,   0,    0,    0),
-('ARM_TEST_ARMOR',      'Test Armor',   'A placeholder armor',      125,        'COMMON', true,       '{}',             'ARMOR',    'MEDIUM',   0,  0,  0,    10,   0,    0),
-('ACC_TEST_ACCESSORY',  'Test Bangle',  'A placeholder accessory',  221,        'COMMON', true,       '{"test": true}', 'ACCESSORY','BANGLE',   10, 10, 0,    0,    10,   0);
+(handle,  item_name,  item_description, 
+gold_value, rarity, equipment,  effect,
+equip_slot, equip_type,
+hp, mp, str,  def,  mag,  spd) VALUES
 
+('WPN_BRONZE_SWORD',  'Bronze Sword', 'An average bronze sword.',
+300,  'COMMON', true, '{}',
+'WEAPON', 'SWORD',
+0,  0,  8,  0,  0,  0),
+
+('WPN_IRON_SWORD',  'Iron Sword', 'An easy to wield iron sword.',
+670,  'COMMON', true, '{}',
+'WEAPON', 'SWORD',
+0,  0,  12, 0,  0,  0),
+
+('WPN_STEEL_SWORD', 'Steel Sword',  'A durable and sharp steel sword.',
+1480, 'UNCOMMON', true, '{}',
+'WEAPON', 'SWORD',
+0,  0,  18, 0,  0,  0),
+
+('WPN_MYTHRIL_SWORD', 'Mythril Sword',  'A sword made of magical metal. [+50% extra damage against "Zombie" enemies]',
+3890, 'RARE', true, '{"effective_damage": "Zombie"}',
+'WEAPON', 'SWORD',
+0,  0,  25, 0,  0,  0),
+
+('WPN_BRAVE_SWORD', 'Brave Sword',  'An extremely light, extremely sharp sword. [+1 additional strike when Attacking]',
+6970, 'LEGENDARY', true, '{"extra_attack": 1}',
+'WEAPON', 'SWORD',
+0,  0,  36, 0,  0,  0);
+
+-- Items (armor)
+INSERT INTO Items
+(handle,  item_name,  item_description, 
+gold_value, rarity, equipment,  effect,
+equip_slot, equip_type,
+hp, mp, str,  def,  mag,  spd) VALUES
+
+('ARM_LEATHER_ARMOR', 'Leather Armor', 'A basic gambeson made of boiled leather.',
+550,  'COMMON', true, '{}',
+'ARMOR',  'MEDIUM',
+0,  0,  0,  8,  0,  0),
+
+('ARM_BRONZE_BREASTPLATE', 'Bronze Breastplate', 'A breastplate made of bronze.',
+840,  'COMMON', true, '{}',
+'ARMOR',  'MEDIUM',
+0,  0,  0,  13, 0,  0),
+
+('ARM_STEEL_BRIGANDINE', 'Steel Brigandine', 'An armor of heavy cloth, reinforced with steel plates.',
+1280, 'UNCOMMON', true, '{}',
+'ARMOR',  'MEDIUM',
+0,  0,  0,  20, 0,  0),
+
+('ARM_MYTHRIL_BREASTPLATE', 'Mythril Breastplate', 'A breastplate made of magical metal. [Reduces magical damage by 33%]',
+2800, 'RARE', true, '{"reduce_mag_damage": 33}',
+'ARMOR',  'MEDIUM',
+0,  0,  0,  27, 0,  0),
+
+('ARM_HEROIC_ARMOR', 'Heroic Armor', 'A set of armor belonging to a hero of legend. [At battle start, +1 Defense rank]',
+4680, 'LEGENDARY', true, '{"defense_rank": 1}',
+'ARMOR',  'MEDIUM',
+0,  0,  0,  35, 0,  0);
+
+-- Items (accessories)
+INSERT INTO Items
+(handle,  item_name,  item_description, 
+gold_value, rarity, equipment,  effect,
+equip_slot, equip_type,
+hp, mp, str,  def,  mag,  spd) VALUES
+
+('ACC_HEALTH_RING',  'Health Ring',  'A ring that increases vitality. [+150 Max HP]',
+1000,  'COMMON', true, '{}',
+'ACCESSORY',  'RING',
+150,  0,  0,  0,  0,  0),
+
+('ACC_MAGIC_BANGLE',  'Magic Bangle',  'A bangle that improves mana efficiency. [x0.8 MP cost for Skills]',
+2200,  'UNCOMMON', true, '{"mp_cost_modifier": 0.8}',
+'ACCESSORY',  'BANGLE',
+0,  0,  0,  0,  10, 0),
+
+('ACC_SYLPH_SHOES',  'Sylph Shoes',  'A pair of shoes blessed with wind magic. [+25% Attack dodge rate]',
+4500,  'RARE', true, '{"extra_dodge": 25}',
+'ACCESSORY',  'SHOES',
+0,  0,  0,  0,  0,  10),
+
+('ACC_CHAMPION_BELT',  'Champion Belt',  'A belt belonging to a champion of the gods. [At battle start, +1 ALL ranks]',
+10000,  'LEGENDARY', true, '{"attack_rank": 1, "defense_rank": 1, "magic_rank": 1, "speed_rank": 1}',
+'ACCESSORY',  'BELT',
+200,  100,  10, 10, 10, 10);
+
+-- Items (consumables)
+INSERT INTO Items
+(handle,  item_name,  item_description, 
+gold_value, rarity, equipment,  effect) VALUES
+
+('ITEM_RED_POTION',  'Red Potion',  'A potion that restores vitality. [Restores HP by 50%]',
+200,  'COMMON', false,  '{"hp_restore_percent": 50}'),
+
+('ITEM_GREEN_POTION',  'Green Potion',  'A potion that greatly restores vitality. [Fully restores HP]',
+500,  'UNCOMMON', false,  '{"hp_restore_percent": 100}'),
+
+('ITEM_GOLDEN_ELIXIR',  'Golden Elixir',  'A super-potion that fully revitalizes the user. [Fully restores HP and MP]',
+1200, 'RARE', false,  '{"hp_restore_percent": 100, "mp_restore_percent": 100}'),
+
+('ITEM_LUSTER_CANDY',  'Luster Candy',  'A mysterious, shining confection. [During battle, +1 ALL ranks]',
+3000, 'LEGENDARY', false,  '{"battle_only": true, "attack_rank": 1, "defense_rank": 1, "magic_rank": 1, "speed_rank": 1}');
+
+--TODO more items
+
+-- Skills
+--TODO
 INSERT INTO Skills
 (handle,        skill_name,         skill_description,      cost, effect) VALUES
-('SKILL_TEST',  'Twiddle Thumbs',   'A placeholder skill',  1,    '{"test": true}');
+('SKILL_TEST',  'Test Skill',   'A placeholder skill',  1,    '{"test": true}');
 
+-- Classes
 INSERT INTO Classes
 (handle,    class_name, class_description,            
 hp,         mp,         str,        def,        mag,        spd,
 hp_growth,  mp_growth,  str_growth, def_growth, mag_growth, spd_growth, 
 skill_1,    skill_5,    skill_10,   skill_15,   skill_20,     
 weapon_type,  armor_type, 
-weapon,       armor,      accessory) VALUES
-('CLASS_WARRIOR', 'Warrior',  'A placeholder description',  
-100,  20, 50, 30, 10, 20,   
-10,   3,  5,  4,  3,  4,          
+weapon,       armor,      accessory,
+item1, item2, item3, item4) VALUES
+('CLASS_WARRIOR', 'Warrior',  'Your average hotheaded, danger-seeking adventurer. Skilled with swords and other physical weapons.',  
+544,  41, 19, 17, 15, 29,   
+74,   9,  2,  2,  1,  3,          
 'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 
 'SWORD',  'MEDIUM',   
-'WPN_TEST_SWORD', 'ARM_TEST_ARMOR', 'ACC_TEST_ACCESSORY');
+'WPN_BRONZE_SWORD', 'ARM_LEATHER_ARMOR', null,
+'ITEM_RED_POTION', null, null, null);
 
--- todo: insert into fixed tables
+--TODO other classes
 
+-- Enemy Data
+--TODO all
+
+-- Preset users
 INSERT INTO LoginUsers (username, user_password) VALUES 
 ('JOHN TEST','123456'), ('JIMMY TEST','123ABC');
 
+-- Preset scores
 INSERT INTO Scores (user_id, gameover_time, char_name, floor, total_exp, final_level, total_value) VALUES
 (1, CURRENT_TIMESTAMP, 'Jim John', 6, 530, 4, 5000),
 (1, CURRENT_TIMESTAMP, 'Mage #64.5', 5, 251, 5, 10000),
 (2, CURRENT_TIMESTAMP, 'Broke Guy', 7, 310, 2, 250);
 
--- todo: preset gamestate
+-- Preset game state
+--TODO
