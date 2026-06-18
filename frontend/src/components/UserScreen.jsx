@@ -180,10 +180,8 @@ function NewCharForm({ongame, setData, confirm, userID, isSubmitting, setIsSubmi
         
         class_info = 
         <>
-        <h2>{chosenClass.class_name}</h2>
-
-        <br/>
-        {chosenClass.class_description}
+        <h1>{chosenClass.class_name}</h1>
+        <h2>{chosenClass.class_description}</h2>
         <hr />
 
         Starting Stats:
