@@ -21,7 +21,7 @@ export default function StartScreen({   confirm,    setData,
     return (
         <div class='parent flex-parent'>
             <div class='child flex-child'>
-                <h2>UNNAMED DUNGEON CRAWLER</h2>
+                <h1>UNNAMED DUNGEON CRAWLER</h1>
 
                 {currentScreen}
 
