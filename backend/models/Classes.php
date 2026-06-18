@@ -288,6 +288,23 @@ class Classes extends \yii\db\ActiveRecord
             return $model->item40 ? $model->item40->item_name : null;
         };
 
+        //skill names too
+        $fields['skill1_name'] = function ($model) {
+            return $model->skill1 ? $model->skill1->skill_name : null;
+        };
+        $fields['skill5_name'] = function ($model) {
+            return $model->skill5 ? $model->skill5->skill_name : null;
+        };
+        $fields['skill10_name'] = function ($model) {
+            return $model->skill10 ? $model->skill10->skill_name : null;
+        };
+        $fields['skill15_name'] = function ($model) {
+            return $model->skill15 ? $model->skill15->skill_name : null;
+        };
+        $fields['skill20_name'] = function ($model) {
+            return $model->skill20 ? $model->skill20->skill_name : null;
+        };
+
         return $fields;
     }
 
