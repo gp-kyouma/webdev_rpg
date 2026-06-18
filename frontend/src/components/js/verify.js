@@ -91,7 +91,16 @@ export async function VerifyCharData(charData, setData, ongame){
         return false
     }
 
+    // Check if a class was selected
+    if (charData.class == null)
+    {
+        alert("No class selected!")
+        return false
+    }
+
     // Check if selected class exists in database
+    // (This is obsolete now)
+    /*
     let chosenclass = await db._get('classes', {handle: charData.class});
     chosenclass = chosenclass[0]//because get returns an array
 
@@ -100,6 +109,7 @@ export async function VerifyCharData(charData, setData, ongame){
         alert("Class \"" + charData.class + "\" is not implemented yet!\n:(")
         return false
     }
+    */
 
     //IF ONGOING GAME EXISTS, WARN USER
     if (ongame != null)

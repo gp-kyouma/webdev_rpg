@@ -138,6 +138,19 @@ function NewCharForm({ongame, setData, confirm, userID, isSubmitting, setIsSubmi
         setIsSubmitting(false)
     }
 
+    // load classes
+    const [classes, setClasses] = useState([]);
+    
+    async function getClasses() {
+        const classdata = await db._get('classes', {});
+        setClasses(classdata);
+    };
+
+    useEffect(() => {
+        const fetchClasses = async () => { await getClasses(); };
+        fetchClasses();
+    }, []);
+
     //TODO: SHOW CLASS INFO WHEN SELECTED
     //ClassBanner(?) component
     //on click radio button: search (preloaded) list of classes
@@ -158,9 +171,9 @@ function NewCharForm({ongame, setData, confirm, userID, isSubmitting, setIsSubmi
 
         <p>
             Class:
-            <label><input type="radio" name="class" value="CLASS_WARRIOR" defaultChecked={true} /> Warrior </label>
-            <label><input type="radio" name="class" value="CLASS_MAGICIAN" /> Magician </label>
-            <label><input type="radio" name="class" value="CLASS_THIEF" /> Thief </label>
+            {classes.map(function(item) { 
+                return ( <label><input type="radio" name="class" value={item.handle} /> {item.class_name} </label> ); 
+            })}
         </p>
         <hr />
 
