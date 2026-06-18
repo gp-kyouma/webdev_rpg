@@ -48,17 +48,49 @@ function LoadGameScreen({ongame, setData, confirm, isSubmitting, setIsSubmitting
     if (ongame)
     {
         //show some game data
-        loadscreen = <>
+        const wpn_name = ongame.weapon_name ? <>Weapon: {ongame.weapon_name}</> : <>Weapon: (None)</>
+        const arm_name = ongame.armor_name ? <>Armor: {ongame.armor_name}</> : <>Armor: (None)</>
+        const acc_name = ongame.accessory_name ? <>Accessory: {ongame.accessory_name}</> : <>Accessory: (None)</>
+        let item_names = []
+        if (ongame.item1_name)
+            item_names.push(ongame.item1_name)
+        if (ongame.item2_name)
+            item_names.push(ongame.item2_name)
+        if (ongame.item3_name)
+            item_names.push(ongame.item3_name)
+        if (ongame.item4_name)
+            item_names.push(ongame.item4_name)
+        const inventory_names = (item_names.length > 0) ? 
+                                <>Items: {item_names.map(function(item, index) { return ( <> {item + ((index < item_names.length-1) ? ", " : "")} </> ); })}</> : 
+                                <>Items: (None)</>
+
+        loadscreen = 
+        <>
         Character name: {ongame.char_name}
         <br/>
-        Class (ID): {ongame.class_id} //remove this later bru
+        Current floor: {ongame.floor}
+        <hr />
+
+        Class: {ongame.class_name}
         <br/>
         Current HP: {ongame.current_hp} / {ongame.max_hp}
         <br/>
-        Current floor: {ongame.floor}
+        Current Level: {ongame.lvl}
         <br/>
-        todo put more info here?
+        Current Gold: {ongame.gold}
         <hr />
+
+        Current Equipment:
+        <br/>
+        {wpn_name}
+        <br/>
+        {arm_name}
+        <br/>
+        {acc_name}
+        <br/>
+        {inventory_names}
+        <hr />
+
         <button type="button" onClick={() => loadGame()} disabled={isSubmitting}> {btnText} </button>
         </>
     }

@@ -302,4 +302,38 @@ class GameStates extends \yii\db\ActiveRecord
         return $this->hasOne(Items::class, ['id' => 'weapon_id']);
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+        // Adiciona o nome da classe e equipamento atual diretamente no JSON
+        $fields['class_name'] = function ($model) {
+            return $model->class ? $model->class->class_name : null;
+        };
+
+        $fields['weapon_name'] = function ($model) {
+            return $model->weapon ? $model->weapon->item_name : null;
+        };
+        $fields['armor_name'] = function ($model) {
+            return $model->armor ? $model->armor->item_name : null;
+        };
+        $fields['accessory_name'] = function ($model) {
+            return $model->accessory ? $model->accessory->item_name : null;
+        };
+
+        $fields['item1_name'] = function ($model) {
+            return $model->item1 ? $model->item1->item_name : null;
+        };
+        $fields['item2_name'] = function ($model) {
+            return $model->item2 ? $model->item2->item_name : null;
+        };
+        $fields['item3_name'] = function ($model) {
+            return $model->item3 ? $model->item3->item_name : null;
+        };
+        $fields['item4_name'] = function ($model) {
+            return $model->item4 ? $model->item4->item_name : null;
+        };
+
+        return $fields;
+    }
+
 }

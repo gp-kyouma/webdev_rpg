@@ -261,4 +261,34 @@ class Classes extends \yii\db\ActiveRecord
         return $this->hasOne(Items::class, ['handle' => 'weapon']);
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+        // Adiciona o nome do equipamento inicial diretamente no JSON
+        $fields['weapon_name'] = function ($model) {
+            return $model->weapon0 ? $model->weapon0->item_name : null;
+        };
+        $fields['armor_name'] = function ($model) {
+            return $model->armor0 ? $model->armor0->item_name : null;
+        };
+        $fields['accessory_name'] = function ($model) {
+            return $model->accessory0 ? $model->accessory0->item_name : null;
+        };
+
+        $fields['item1_name'] = function ($model) {
+            return $model->item10 ? $model->item10->item_name : null;
+        };
+        $fields['item2_name'] = function ($model) {
+            return $model->item20 ? $model->item20->item_name : null;
+        };
+        $fields['item3_name'] = function ($model) {
+            return $model->item30 ? $model->item30->item_name : null;
+        };
+        $fields['item4_name'] = function ($model) {
+            return $model->item40 ? $model->item40->item_name : null;
+        };
+
+        return $fields;
+    }
+
 }
