@@ -131,12 +131,96 @@ export default class Player {
         }
     }
 
-    get EXPtoNextLevel(){
-        return "TODO"
+    addToLog(str)
+    {
+        if (this.log_)
+            this.log_(str)
+        else
+            console.log("[player] Log function not set (str was " + str + ")")
     }
 
-    levelUp(newEXP){
+    //level calculation stuff
+    static LevelEXPModifier = 10
+
+    static LevelFromEXP(exp){
+        //this (should) convert it back correctly
+        const converted_exp = Math.floor(exp/Player.LevelEXPModifier)
+        const tri = Math.floor((Math.sqrt(8*converted_exp + 1) - 1)/2)
+        return tri + 1
+    }
+
+    static EXPFromLevel(level){
+        //total exp for level n = modifier * triangular_number(n-1)
+        return Player.LevelEXPModifier * ((level-1)*level)/2
+    }
+    
+    get EXPtoNextLevel(){
+        return Player.EXPFromLevel(this.lvl+1) - this.exp
+    }
+
+    gainEXP(exp){
         //TODO
+        //PLACEHOLDER
+        this.exp += exp
+        this.addToLog("You gained " + exp + " EXP!")
+        //TODO LEVEL UP CHECKS AND SO ON
+        const new_lvl = Player.LevelFromEXP(this.exp)
+        const lvl_diff = new_lvl - this.lvl
+        if (lvl_diff > 0)
+        {
+            this.addToLog("You are now level " + new_lvl + "! [+" + lvl_diff + " level(s)]")
+            //LEVEL UP LOGIC
+            //STATS
+            //should some randomness be added...?
+            const hp_gain = this.class.hp_growth * lvl_diff
+            const mp_gain = this.class.mp_growth * lvl_diff
+            const str_gain = this.class.str_growth * lvl_diff
+            const def_gain = this.class.def_growth * lvl_diff
+            const mag_gain = this.class.mag_growth * lvl_diff
+            const spd_gain = this.class.spd_growth * lvl_diff
+
+            //maintain hp ratio on level up
+            const hp_ratio = this.current_hp / this.max_hp
+            const mp_ratio = this.current_mp / this.max_mp
+
+            this.max_hp += hp_gain
+            this.max_mp += mp_gain
+
+            this.current_hp = this.max_hp * hp_ratio
+            this.current_mp = this.max_mp * mp_ratio
+
+            this.str += str_gain
+            this.def += def_gain
+            this.mag += mag_gain
+            this.spd += spd_gain
+
+            this.addToLog("Gained " + hp_gain + " Max HP!")
+            this.addToLog("Gained " + mp_gain + " Max MP!")
+            this.addToLog("Gained " + str_gain + " Strength!")
+            this.addToLog("Gained " + def_gain + " Defense!")
+            this.addToLog("Gained " + mag_gain + " Magic!")
+            this.addToLog("Gained " + spd_gain + " Speed!")
+
+            //UPDATE SKILL
+            let new_skill = null
+
+            const skill_lvls = [5,10,15,20]
+            for (let i = 0; i < skill_lvls.length; i++)
+            {
+                const skill_lvl = skill_lvls[i]
+                const skill = this.class.skills[skill_lvl]
+                if (this.lvl < skill_lvl && new_lvl >= skill_lvl && skill != this.skill.handle)
+                    new_skill = skill
+            }
+            //TODO ACTUALLY LOAD NEW SKILL FROM HANDLE
+            if (new_skill)
+                console.log(new_skill)//PLACEHOLDER
+            //THIS SUCKS BECAUSE OF ASYNC
+            //..........
+
+            //UPDATE LVL
+            this.lvl = new_lvl
+        }
     }
 
     get hasWeapon() {
@@ -185,7 +269,25 @@ export default class Player {
     clone() {
 
         // Deeply clone the internal data, then reconstruct the class
-        let clonedPlayer = structuredClone(this);
+
+        //this entire thing could be a 1 liner if it wasn't for the log_ function
+        //i gave it my all for the log_ function
+        let functions = {};
+        let data = {};
+
+        for (const [key, value] of Object.entries(this)) {
+            if (typeof value === "function") {
+                functions[key] = value;
+            } else {
+                data[key] = value;
+            }
+        }
+
+        let clonedPlayer = structuredClone(data);
+
+        Object.assign(clonedPlayer, functions);
+
+        //let clonedPlayer = structuredClone(this);
 
         clonedPlayer.class = this.class.clone()
         clonedPlayer.skill = this.skill.clone()

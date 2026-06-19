@@ -198,7 +198,7 @@ export default class GameState {
         if (this.log_)
             this.log_(str)
         else
-            console.log("Log function not set (str was " + str + ")")
+            console.log("[gamestate] Log function not set (str was " + str + ")")
     }
 
     generateNewFloor()
@@ -342,6 +342,12 @@ export default class GameState {
         this.boss_defeated = true
         this.addToLog("You destroyed the boss enemy (which does not exist) with your powers (which also do not exist).")
     }
+    //debug, remove later
+    gainEXP(exp)
+    {
+        this.addToLog("You're about to gain "+exp+" EXP for no reason!")
+        this.player.gainEXP(exp)
+    }
 
     //cloning business.
     clone() {
@@ -353,6 +359,10 @@ export default class GameState {
         let data = {};
 
         for (const [key, value] of Object.entries(this)) {
+            if (key === "player" || key === "battle") {
+                continue;
+            }
+            
             if (typeof value === "function") {
                 functions[key] = value;
             } else {

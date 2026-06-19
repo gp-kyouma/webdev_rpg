@@ -69,6 +69,7 @@ export default function GameScreen({data, setData, quit}) {
     useEffect(() => {
         let newdata = data.clone()
         newdata.log_ = (str) => { setLog(prev => [...prev, str]); }
+        newdata.player.log_ = (str) => { setLog(prev => [...prev, str]); }
         setData(newdata)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -84,7 +85,8 @@ export default function GameScreen({data, setData, quit}) {
     let currentTileScreen = null
     switch (data.currentTile) {
         case TileTypes.TREASURE:
-            currentTileScreen = <p>large chest ahead (placeholder)</p>
+            //placeholder to test exp gain
+            currentTileScreen = <button type="button" onClick={() => applyToData("gainEXP",7)} > Gain 7 EXP For No Reason </button>
             //todo treasure screen
             break;
 
