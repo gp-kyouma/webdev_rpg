@@ -152,6 +152,13 @@ export default class Player {
         return !(this.items?.length === 0);
     }
 
+    get totalGoldValue(){
+        return this.gold    + (this.hasWeapon ? this.weapon.gold_value : 0) 
+                            + (this.hasArmor ? this.armor.gold_value : 0) 
+                            + (this.hasAccessory ? this.accessory.gold_value : 0) 
+                            + (this.hasItems ? this.items.reduce((acc, item) => acc + item.gold_value, 0) : 0)
+    }
+
     //returns object with every effect from current equipped items
     //numeric keys are *added* together
     get equippedEffects(){

@@ -42,49 +42,57 @@ export default function PlayerInfo({data, apply}) {
         <h2>{data.name}, the {data.class.class_name}</h2>
         <hr />
 
-        Level: {data.lvl}
-        <br/>
-        Total EXP: {data.exp}
-        <br/>
-        EXP to next level: {data.EXPtoNextLevel}
-        <hr />
+        <div class="flex-parent flex-gap">
+            <div class="flex-child">
+                Level: {data.lvl}
+                <br/>
+                Total EXP: {data.exp}
+                <br/>
+                EXP to next level: {data.EXPtoNextLevel}
+                <hr />
 
-        <div>
-            <div>
-                HP: <span class={hp_color}>{data.current_hp}</span> / {data.max_hp}
+                <div>
+                    <div>
+                        HP: <span class={hp_color}>{data.current_hp}</span> / {data.max_hp}
+                        <br/>
+                        MP: <span class={mp_color}>{data.current_mp}</span> / {data.max_mp}
+                        <br/>
+                        Strength: {data.str}
+                        <br/>
+                        Defense: {data.def}
+                        <br/>
+                        Magic: {data.mag}
+                        <br/>
+                        Speed: {data.spd}
+                    </div>
+                </div>
+                <hr />
+
+                <b>Skill: {data.skill.skill_name}</b>
                 <br/>
-                MP: <span class={mp_color}>{data.current_mp}</span> / {data.max_mp}
+                {data.skill.skill_description}
                 <br/>
-                Strength: {data.str}
+                MP cost: {data.skill.cost}
+            </div>
+            <div class="flex-child">
+                Gold: {data.gold}
                 <br/>
-                Defense: {data.def}
+                Total value of equipment + inventory: {data.totalGoldValue - data.gold}
                 <br/>
-                Magic: {data.mag}
+                Total gold value: {data.totalGoldValue}
+                <hr />
+                Equipment:
                 <br/>
-                Speed: {data.spd}
+                {wpn_name}
+                <br/>
+                {arm_name}
+                <br/>
+                {acc_name}
+                <br/>
+                {inventory_names}
             </div>
         </div>
-        <hr />
 
-        <b>Skill: {data.skill.skill_name}</b>
-        <br/>
-        {data.skill.skill_description}
-        <br/>
-        MP cost: {data.skill.cost}
-        <hr />
-
-        Gold: {data.gold}
-        <br/>
-        <br/>
-        Equipment:
-        <br/>
-        {wpn_name}
-        <br/>
-        {arm_name}
-        <br/>
-        {acc_name}
-        <br/>
-        {inventory_names}
         <hr />
         </>
     );

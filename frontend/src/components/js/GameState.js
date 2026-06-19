@@ -113,7 +113,7 @@ export default class GameState {
                         floor: this.floor, 
                         total_exp: this.player.exp, 
                         final_level: this.player.lvl, 
-                        total_value: this.player.gold}
+                        total_value: this.player.totalGoldValue}
         return score
     }
 
@@ -185,7 +185,7 @@ export default class GameState {
     {
         //create entry in score database
         await db._create('scores',this.prepareScoreEntry())
-        
+
         //delete this entry in gamestate database
         await db._delete('game-states',this.id)
 

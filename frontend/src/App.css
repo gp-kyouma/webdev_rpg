@@ -74,6 +74,7 @@
 /* General layout styles */
 .flex-parent { display: flex; }
 .flex-child { flex: 1; }
+.flex-gap { column-gap: 20px; }
 
 .align-center { 
   justify-content: center;
