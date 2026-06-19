@@ -8,6 +8,8 @@ export default class GameState {
 
     constructor() { // "empty" state
 
+        this.game_over = false
+        
         this.id = 0
         this.user_id = 0
 
@@ -99,6 +101,22 @@ export default class GameState {
         return result
     }
 
+    prepareScoreEntry(){
+        const date = new Date; // Current date/time
+
+        // Format: 'YYYY-MM-DDTHH:mm:ss.sssZ' -> 'YYYY-MM-DD HH:mm:ss'
+        const sqlTimestamp = date.toISOString().slice(0, 19).replace('T', ' ');
+
+        const score = { user_id : this.user_id, 
+                        gameover_time : sqlTimestamp, 
+                        char_name: this.player.name, 
+                        floor: this.floor, 
+                        total_exp: this.player.exp, 
+                        final_level: this.player.lvl, 
+                        total_value: this.player.gold}
+        return score
+    }
+
     async startGameState(newCharData)
     {
         this.id = 0
@@ -161,6 +179,18 @@ export default class GameState {
     {
         await db._update('game-states',this.id,this.prepareDatabaseEntry())
         this.addToLog("Game state saved!")
+    }
+
+    async endGameState()
+    {
+        //create entry in score database
+        await db._create('scores',this.prepareScoreEntry())
+        
+        //delete this entry in gamestate database
+        await db._delete('game-states',this.id)
+
+        this.game_over = true
+        this.addToLog("Game over! (Score saved to leaderboards)")
     }
 
     addToLog(str)

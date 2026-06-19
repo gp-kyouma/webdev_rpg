@@ -30,7 +30,7 @@ function Log({logData}) {
 function MovementWidget({pos, apply}) {
     
     return (
-        <div class="cross-container flex-wrapper">
+        <div class="cross-container align-center">
             <button class="btn btn-top" type="button" onClick={() => apply("movePlayer",'N')}>N</button>
             <br/>
             <button class="btn btn-left" type="button" onClick={() => apply("movePlayer",'W')}>W</button>
@@ -49,7 +49,7 @@ export default function GameScreen({data, setData, quit}) {
     const [log, setLog] = useState([]);
 
     function quitWithoutSaving(){
-        if (confirm("Quit current game?\n(All progress made since the start of the floor will be lost)"))
+        if (data.game_over || confirm("Quit current game?\n(All progress made since the start of the floor will be lost)"))
         {
             setData(new GameState)
             quit()
@@ -58,9 +58,12 @@ export default function GameScreen({data, setData, quit}) {
     
     async function applyToData(method,params)
     {
-        let newdata = data.clone()
-        await newdata[method](params);
-        setData(newdata)
+        if (!data.game_over) // once game is over, block all methods
+        {
+            let newdata = data.clone()
+            await newdata[method](params);
+            setData(newdata)
+        }
     }
 
     useEffect(() => {
@@ -101,9 +104,10 @@ export default function GameScreen({data, setData, quit}) {
             <div class='child flex-child'>
                 <Log logData = {log}/>
 
-                <button type="button" onClick={() => quitWithoutSaving()} >
-                    Quit Without Saving
-                </button>
+                <div style={{display: 'flex', gap: '655px'}}>
+                    <button type="button" onClick={() => quitWithoutSaving()} > {data.game_over ? "Quit to User Page" :"Quit Without Saving"} </button>
+                    <button type="button" onClick={() => applyToData("endGameState")} > End Adventure </button>
+                </div>
                 
                 <br/>
                 <br/>
