@@ -102,6 +102,7 @@ export default function GameScreen({data, setData, quit}) {
         <>
         <div class='parent flex-parent'>
             <div class='child flex-child'>
+                <h2>ADVENTURE LOG</h2>
                 <Log logData = {log}/>
 
                 <div style={{display: 'flex', gap: '655px'}}>
@@ -117,6 +118,7 @@ export default function GameScreen({data, setData, quit}) {
                 <br/>
             </div>
             <div class='child flex-child'>
+                <h2>DUNGEON FLOOR {data.floor}</h2>
                 <Minimap mapData={data.map_data} viewData={data.view_data}/>
                 <PlayerInfo data={data.player}/>
             </div>
