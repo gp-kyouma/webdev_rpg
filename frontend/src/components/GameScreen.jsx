@@ -4,6 +4,8 @@ import Minimap from './Minimap';
 import { TileTypes } from './js/MapUtils';
 
 import BossRoomScreen from './BossRoomScreen';
+import PlayerInfo from './PlayerInfo';
+
 import GameState from './js/GameState';
 
 function Log({logData}) {
@@ -15,7 +17,7 @@ function Log({logData}) {
     useEffect(scrollToBottom, [logData]);
     
     return (
-        <div class='child flex-child'>
+        <div>
             <p></p>
             <ul class="scroll-list">
                 {logData.map(i => <li>{i}</li>)}
@@ -28,7 +30,7 @@ function Log({logData}) {
 function MovementWidget({pos, apply}) {
     
     return (
-        <div class="cross-container">
+        <div class="cross-container flex-wrapper">
             <button class="btn btn-top" type="button" onClick={() => apply("movePlayer",'N')}>N</button>
             <br/>
             <button class="btn btn-left" type="button" onClick={() => apply("movePlayer",'W')}>W</button>
@@ -96,21 +98,25 @@ export default function GameScreen({data, setData, quit}) {
     return (
         <>
         <div class='parent flex-parent'>
-            <Log logData = {log}/>
-            <Minimap mapData={data.map_data} viewData={data.view_data}/>
+            <div class='child flex-child'>
+                <Log logData = {log}/>
+
+                <button type="button" onClick={() => quitWithoutSaving()} >
+                    Quit Without Saving
+                </button>
+                
+                <br/>
+                <br/>
+                    {actionsScreen}
+                <br/>
+                    {currentTileScreen}
+                <br/>
+            </div>
+            <div class='child flex-child'>
+                <Minimap mapData={data.map_data} viewData={data.view_data}/>
+                <PlayerInfo data={data.player}/>
+            </div>
         </div>
-
-        <button type="button" onClick={() => quitWithoutSaving()} > Quit Without Saving </button>
-        
-        <br/><br/>
-
-        {actionsScreen}
-
-        <br/>
-
-        {currentTileScreen}
-
-        <br/>
 
         <br/>
         hello i am a placeholder here is my data from start screen: 

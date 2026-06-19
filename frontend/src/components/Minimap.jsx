@@ -81,7 +81,7 @@ export default function Minimap({mapData, viewData}) {
     }
     
     return (
-        <div class='child flex-child'>
+        <div>
             <p></p>
             <table class="minimap-grid">
                 <tbody>

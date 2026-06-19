@@ -131,8 +131,13 @@ export default class Player {
         }
     }
 
-    //TODO:
-    //LEVEL UP FUNCTION
+    get EXPtoNextLevel(){
+        return "TODO"
+    }
+
+    levelUp(newEXP){
+        //TODO
+    }
 
     get hasWeapon() {
         return !(this.weapon == null);
@@ -145,6 +150,28 @@ export default class Player {
     }
     get hasItems() {
         return !(this.items?.length === 0);
+    }
+
+    //returns object with every effect from current equipped items
+    //numeric keys are *added* together
+    get equippedEffects(){
+        //i took this from google hopefully it actually works
+        const mergeAndSumNumeric = (...objs) => {
+            return objs.reduce((acc, obj) => {
+                for (const [key, value] of Object.entries(obj)) {
+                if (typeof value === 'number' && typeof acc[key] === 'number') {
+                    // Both the existing value and new value are numeric, so add them
+                    acc[key] += value;
+                } else {
+                    // Fallback: Overwrite or set the value if it's non-numeric or new
+                    acc[key] = value;
+                }
+                }
+                return acc;
+            }, {});
+        };
+
+        return mergeAndSumNumeric(this.weapon.effect, this.armor.effect, this.accessory.effect)
     }
 
     //cloning business.

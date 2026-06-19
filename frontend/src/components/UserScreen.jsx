@@ -5,6 +5,8 @@ import * as db from './js/DatabaseCRUD';
 import GameState from './js/GameState';
 
 import SortableScoresTable from './SortableScoresTable';
+import ClassBanner from './ClassBanner';
+import OngoingGameBanner from './OngoingGameBanner';
 
 function UserScoresScreen({scores, setScores}) {
 
@@ -47,50 +49,9 @@ function LoadGameScreen({ongame, setData, confirm, isSubmitting, setIsSubmitting
     let loadscreen
     if (ongame)
     {
-        //show some game data
-        const wpn_name = ongame.weapon_name ? <>Weapon: {ongame.weapon_name}</> : <>Weapon: (None)</>
-        const arm_name = ongame.armor_name ? <>Armor: {ongame.armor_name}</> : <>Armor: (None)</>
-        const acc_name = ongame.accessory_name ? <>Accessory: {ongame.accessory_name}</> : <>Accessory: (None)</>
-        let item_names = []
-        if (ongame.item1_name)
-            item_names.push(ongame.item1_name)
-        if (ongame.item2_name)
-            item_names.push(ongame.item2_name)
-        if (ongame.item3_name)
-            item_names.push(ongame.item3_name)
-        if (ongame.item4_name)
-            item_names.push(ongame.item4_name)
-        const inventory_names = (item_names.length > 0) ? 
-                                <>Items: {item_names.map(function(item, index) { return ( <> {item + ((index < item_names.length-1) ? ", " : "")} </> ); })}</> : 
-                                <>Items: (None)</>
-
         loadscreen = 
         <>
-        Character name: {ongame.char_name}
-        <br/>
-        Current floor: {ongame.floor}
-        <hr />
-
-        Class: {ongame.class_name}
-        <br/>
-        Current HP: {ongame.current_hp} / {ongame.max_hp}
-        <br/>
-        Current Level: {ongame.lvl}
-        <br/>
-        Current Gold: {ongame.gold}
-        <hr />
-
-        Current Equipment:
-        <br/>
-        {wpn_name}
-        <br/>
-        {arm_name}
-        <br/>
-        {acc_name}
-        <br/>
-        {inventory_names}
-        <hr />
-
+        <OngoingGameBanner data={ongame}/>
         <button type="button" onClick={() => loadGame()} disabled={isSubmitting}> {btnText} </button>
         </>
     }
@@ -160,85 +121,7 @@ function NewCharForm({ongame, setData, confirm, userID, isSubmitting, setIsSubmi
 
     let class_info = null
     if (chosenClass)
-    {
-        //show class data
-        const wpn_name = chosenClass.weapon_name ? <>Weapon: {chosenClass.weapon_name}</> : <>Weapon: (None)</>
-        const arm_name = chosenClass.armor_name ? <>Armor: {chosenClass.armor_name}</> : <>Armor: (None)</>
-        const acc_name = chosenClass.accessory_name ? <>Accessory: {chosenClass.accessory_name}</> : <>Accessory: (None)</>
-        let item_names = []
-        if (chosenClass.item1_name)
-            item_names.push(chosenClass.item1_name)
-        if (chosenClass.item2_name)
-            item_names.push(chosenClass.item2_name)
-        if (chosenClass.item3_name)
-            item_names.push(chosenClass.item3_name)
-        if (chosenClass.item4_name)
-            item_names.push(chosenClass.item4_name)
-        const inventory_names = (item_names.length > 0) ? 
-                                <>Items: {item_names.map(function(item, index) { return ( <> {item + ((index < item_names.length-1) ? ", " : "")} </> ); })}</> : 
-                                <>Items: (None)</>
-        
-        class_info = 
-        <>
-        <h1>{chosenClass.class_name}</h1>
-        <h2>{chosenClass.class_description}</h2>
-        <hr />
-
-        Starting Stats:
-        <br/>
-        <div style={{display: 'flex', "columnGap": "20px"}}>
-            <div>
-                HP: {chosenClass.hp}
-                <br/>
-                MP: {chosenClass.mp}
-                <br/>
-                Strength: {chosenClass.str}
-                <br/>
-                Defense: {chosenClass.def}
-                <br/>
-                Magic: {chosenClass.mag}
-                <br/>
-                Speed: {chosenClass.spd}
-            </div>
-            <div>
-                [+{chosenClass.hp_growth} per level up]
-                <br/>
-                [+{chosenClass.mp_growth} per level up]
-                <br/>
-                [+{chosenClass.str_growth} per level up]
-                <br/>
-                [+{chosenClass.def_growth} per level up]
-                <br/>
-                [+{chosenClass.mag_growth} per level up]
-                <br/>
-                [+{chosenClass.spd_growth} per level up]
-            </div>
-        </div>
-        <hr />
-
-        Level 1 Skill: {chosenClass.skill1_name}
-        <br/>
-        Level 5 Skill: {chosenClass.skill5_name}
-        <br/>
-        Level 10 Skill: {chosenClass.skill10_name}
-        <br/>
-        Level 15 Skill: {chosenClass.skill15_name}
-        <br/>
-        Level 20 Skill: {chosenClass.skill20_name}
-        <hr />
-
-        Starting Equipment:
-        <br/>
-        {wpn_name}
-        <br/>
-        {arm_name}
-        <br/>
-        {acc_name}
-        <br/>
-        {inventory_names}
-        <hr />
-        </>
-    }
+        class_info = <ClassBanner data={chosenClass}/>
 
     return (
         <>

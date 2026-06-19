@@ -13,53 +13,18 @@
   text-align: center;
 }
 
-.no-tile {
-  background: black;
-}
-
-.unknown-tile {
-  background: rgb(48, 48, 48);
-}
-
-.visited-tile-default {
-  background: darkgoldenrod;
-}
-
-.current-tile-default {
-  background: gold;
-}
-
-.visited-tile-safe {
-  background: gray;
-}
-
-.current-tile-safe {
-  background: white;
-}
-
-.visited-tile-treasure {
-  background: darkcyan;
-}
-
-.current-tile-treasure {
-  background: cyan;
-}
-
-.visited-tile-shop {
-  background: darkgreen;
-}
-
-.current-tile-shop {
-  background: limegreen;
-}
-
-.visited-tile-boss {
-  background: darkred;
-}
-
-.current-tile-boss {
-  background: crimson;
-}
+.no-tile {background: black;}
+.unknown-tile {background: rgb(48, 48, 48);}
+.visited-tile-default {background: darkgoldenrod;}
+.current-tile-default {background: gold;}
+.visited-tile-safe {background: gray;}
+.current-tile-safe {background: white;}
+.visited-tile-treasure {background: darkcyan;}
+.current-tile-treasure {background: cyan;}
+.visited-tile-shop {background: darkgreen;}
+.current-tile-shop {background: limegreen;}
+.visited-tile-boss {background: darkred;}
+.current-tile-boss {background: crimson;}
 
 /* Log related styles */
 .scroll-list {
@@ -72,13 +37,7 @@
   color: white;
 }
 
-/* General layout styles */
-.flex-parent {
-  display: flex;
-}
-.flex-child {
-  flex: 1;
-}
+/* Movement widget */
 
 .cross-container {
   display: grid;
@@ -88,42 +47,16 @@
   align-items: center;
 }
 
-.btn {
-  width: 35px;
-  height: 35px;
-}
+.btn { width: 35px; height: 35px; }
+.btn-text { width: 35px; height: 35px; align-content: center; text-align: center; }
 
-.btn-text {
-  width: 35px;
-  height: 35px;
-  align-content: center;
-  text-align:center;
-}
+.btn-top { grid-column: 2; grid-row: 1; }
+.btn-left { grid-column: 1; grid-row: 2; }
+.btn-middle { grid-column: 2; grid-row: 2; }
+.btn-right { grid-column: 3; grid-row: 2; }
+.btn-bottom { grid-column: 2; grid-row: 3; }
 
-.btn-top {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.btn-left {
-  grid-column: 1;
-  grid-row: 2;
-}
-
-.btn-right {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-.btn-bottom {
-  grid-column: 2;
-  grid-row: 3;
-}
-
-.btn-middle {
-  grid-column: 2;
-  grid-row: 2;
-}
+/* Scores table */
 
 .score-table th,td {
   border-bottom: 1px solid #ddd;
@@ -131,21 +64,40 @@
   padding: 5px;
 }
 
-.edge-left {
-  border-left: 1px solid #ddd;
-}
-.edge-right {
-  border-right: 1px solid #ddd;
-}
-
 .score-table td:nth-child(odd), th:nth-child(odd) {
   background-color: #eeeeee;
 }
 
-.parent {
-  padding: 1rem
+.edge-left { border-left: 1px solid #ddd; }
+.edge-right { border-right: 1px solid #ddd; }
+
+/* General layout styles */
+.flex-parent { display: flex; }
+.flex-child { flex: 1; }
+
+.flex-wrapper { /* for centering */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.child {
-  /*border: 1px solid black; /*keep for visual debug until release*/
-  padding: 1rem
-}
+
+.parent { padding: 1rem }
+.child { padding: 1rem }
+
+/* Show the child when the parent is hovered */
+.hidden-child { display: none; }
+.hiding-parent:hover .hidden-child { display: block; }
+.bold-on-hover:hover { font-weight: bold; }
+
+.rarity-COMMON { color: grey; }
+.rarity-UNCOMMON { color: blue; }
+.rarity-RARE { color: magenta; }
+.rarity-LEGENDARY { color: gold; }
+
+.text-positive { color: green; }
+.text-middling { color: darkorange; }
+.text-negative { color: red; }
+
+.text-100-magic { color: magenta; }
+.text-50-magic { color: darkmagenta; }
+.text-0-magic { color: black; }
