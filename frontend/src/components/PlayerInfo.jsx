@@ -18,8 +18,8 @@ export default function PlayerInfo({data, apply}) {
                                     </> ); })}</> : 
                                 <>Items:<br/>(None)</>
 
-    const hp_ratio = data.current_hp / data.max_hp
-    const mp_ratio = data.current_mp / data.max_mp
+    const hp_ratio = data.current_hp / data.totalMaxHP
+    const mp_ratio = data.current_mp / data.totalMaxMP
     let hp_color
     let mp_color
 
@@ -53,17 +53,17 @@ export default function PlayerInfo({data, apply}) {
 
                 <div>
                     <div>
-                        HP: <span class={hp_color}>{data.current_hp}</span> / {data.max_hp}
+                        HP: <span class={hp_color}>{data.current_hp}</span> / {data.totalMaxHP}
                         <br/>
-                        MP: <span class={mp_color}>{data.current_mp}</span> / {data.max_mp}
+                        MP: <span class={mp_color}>{data.current_mp}</span> / {data.totalMaxMP}
                         <br/>
-                        Strength: {data.str}
+                        Strength: {data.totalStr}
                         <br/>
-                        Defense: {data.def}
+                        Defense: {data.totalDef}
                         <br/>
-                        Magic: {data.mag}
+                        Magic: {data.totalMag}
                         <br/>
-                        Speed: {data.spd}
+                        Speed: {data.totalSpd}
                     </div>
                 </div>
                 <hr />

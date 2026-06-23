@@ -40,9 +40,6 @@ export default class Player {
         // get default class data from class struct
         await this.class.getFromDB(newCharData.class)
 
-        this.current_hp = this.class.hp
-        this.current_mp = this.class.mp
-
         this.max_hp = this.class.hp
         this.max_mp = this.class.mp
 
@@ -53,7 +50,7 @@ export default class Player {
 
         this.exp = 0
         this.lvl = 1
-        this.gold = 100//starting gold, placeholder
+        this.gold = 1000//starting gold
 
         //LOAD HANDLES
         await this.skill.getFromDB(this.class.skills[1])
@@ -82,6 +79,9 @@ export default class Player {
                 this.items.push(newItem)
             }
         }
+
+        this.current_hp = this.totalMaxHP
+        this.current_mp = this.totalMaxMP
     }
 
     async setFromGameState(gameStateData) {
@@ -159,19 +159,19 @@ export default class Player {
     }
 
     gainEXP(exp){
-        //TODO
-        //PLACEHOLDER
         this.exp += exp
         this.addToLog("You gained " + exp + " EXP!")
-        //TODO LEVEL UP CHECKS AND SO ON
+        //CHECK FOR LEVELUP
         const new_lvl = Player.LevelFromEXP(this.exp)
         const lvl_diff = new_lvl - this.lvl
         if (lvl_diff > 0)
         {
             this.addToLog("You are now level " + new_lvl + "! [+" + lvl_diff + " level(s)]")
             //LEVEL UP LOGIC
+
             //STATS
-            //should some randomness be added...?
+            //(should some randomness be added?)
+            //TODO
             const hp_gain = this.class.hp_growth * lvl_diff
             const mp_gain = this.class.mp_growth * lvl_diff
             const str_gain = this.class.str_growth * lvl_diff
@@ -212,11 +212,16 @@ export default class Player {
                 if (this.lvl < skill_lvl && new_lvl >= skill_lvl && skill != this.skill.handle)
                     new_skill = skill
             }
-            //TODO ACTUALLY LOAD NEW SKILL FROM HANDLE
+            //LOAD NEW SKILL FROM HANDLE
             if (new_skill)
-                console.log(new_skill)//PLACEHOLDER
-            //THIS SUCKS BECAUSE OF ASYNC
-            //..........
+            {
+                //async workaround
+                async function setNewSkill(player) {
+                    await player.skill.getFromDB(new_skill)
+                    player.addToLog("Learned new skill \"" + player.skill.skill_name + "\"!")
+                };
+                setNewSkill(this)
+            }
 
             //UPDATE LVL
             this.lvl = new_lvl
@@ -234,6 +239,43 @@ export default class Player {
     }
     get hasItems() {
         return !(this.items?.length === 0);
+    }
+
+    //calculate "true" stat values by adding character stats + equip stats
+    get totalMaxHP(){
+        return this.max_hp  + (this.hasWeapon && this.weapon.hp ? this.weapon.hp : 0) 
+                            + (this.hasArmor && this.armor.hp ? this.armor.hp : 0) 
+                            + (this.hasAccessory && this.accessory.hp ? this.accessory.hp : 0)
+    }
+
+    get totalMaxMP(){
+        return this.max_mp  + (this.hasWeapon && this.weapon.mp ? this.weapon.mp : 0) 
+                            + (this.hasArmor && this.armor.mp ? this.armor.mp : 0) 
+                            + (this.hasAccessory && this.accessory.mp ? this.accessory.mp : 0)
+    }
+
+    get totalStr(){
+        return this.str     + (this.hasWeapon && this.weapon.str ? this.weapon.str : 0) 
+                            + (this.hasArmor && this.armor.str ? this.armor.str : 0) 
+                            + (this.hasAccessory && this.accessory.str ? this.accessory.str : 0)
+    }
+
+    get totalDef(){
+        return this.def     + (this.hasWeapon && this.weapon.def ? this.weapon.def : 0) 
+                            + (this.hasArmor && this.armor.def ? this.armor.def : 0) 
+                            + (this.hasAccessory && this.accessory.def ? this.accessory.def : 0)
+    }
+
+    get totalMag(){
+        return this.mag     + (this.hasWeapon && this.weapon.mag ? this.weapon.mag : 0) 
+                            + (this.hasArmor && this.armor.mag ? this.armor.mag : 0) 
+                            + (this.hasAccessory && this.accessory.mag ? this.accessory.mag : 0)
+    }
+
+    get totalSpd(){
+        return this.spd     + (this.hasWeapon && this.weapon.spd ? this.weapon.spd : 0) 
+                            + (this.hasArmor && this.armor.spd ? this.armor.spd : 0) 
+                            + (this.hasAccessory && this.accessory.spd ? this.accessory.spd : 0)
     }
 
     get totalGoldValue(){
@@ -262,7 +304,11 @@ export default class Player {
             }, {});
         };
 
-        return mergeAndSumNumeric(this.weapon.effect, this.armor.effect, this.accessory.effect)
+        const weapon_effects = (this.hasWeapon ? this.weapon.effect : {}) 
+        const armor_effects = (this.hasArmor ? this.armor.effect : {}) 
+        const accessory_effects = (this.hasAccessory ? this.accessory.effect : {}) 
+
+        return mergeAndSumNumeric(weapon_effects, armor_effects, accessory_effects)
     }
 
     //cloning business.

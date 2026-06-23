@@ -389,7 +389,8 @@ gold_value, rarity, equipment,  effect) VALUES
 --TODO
 INSERT INTO Skills
 (handle,        skill_name,         skill_description,      cost, effect) VALUES
-('SKILL_TEST',  'Test Skill',   'A placeholder skill',  1,    '{"test": true}');
+('SKILL_TEST',  'Test Skill',   'A placeholder skill',  1,    '{"test": true}'),
+('SKILL_TEST_2','Test Skill 2', 'Another placeholder skill',  2,    '{"test": true}');
 
 -- Classes
 INSERT INTO Classes
@@ -403,7 +404,7 @@ item1, item2, item3, item4) VALUES
 ('CLASS_WARRIOR', 'Warrior',  'Your average hotheaded, danger-seeking adventurer. Skilled with swords and other physical weapons.',  
 544,  41, 19, 17, 15, 29,   
 74,   9,  2,  2,  1,  3,          
-'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 'SKILL_TEST', 
+'SKILL_TEST', 'SKILL_TEST_2', 'SKILL_TEST_2', 'SKILL_TEST', 'SKILL_TEST', 
 'SWORD',  'MEDIUM',   
 'WPN_BRONZE_SWORD', 'ARM_LEATHER_ARMOR', null,
 'ITEM_RED_POTION', null, null, null);
