@@ -412,7 +412,32 @@ item1, item2, item3, item4) VALUES
 --TODO other classes
 
 -- Enemy Data
---TODO all
+INSERT INTO EnemyData
+(handle,  enemy_name,
+is_boss,  starting_floor, stopping_floor,
+base_level, max_level,  level_up_factor,
+hp, str,  def,  mag,  spd,  skill,
+gold_dropped, exp_dropped) VALUES
+
+('ENEMY_MIMIC', 'Mimic',
+false,  -1,  null,
+1,  null,  0.1,   
+333,  25, 25, 25, 25, 'SKILL_TEST_2',
+50, 25),
+
+('ENEMY_GIANT_RAT', 'Giant Rat',
+false,  1,  10,
+1,  5,  0.05,   
+200,  25, 20, 20, 20, 'SKILL_TEST',
+10, 10),
+
+('ENEMY_DUNGEON_ENT', 'Dungeon Ent',
+true,  1,  20,
+5,  15,  0.05,   
+500,  30, 20, 30, 30, 'SKILL_TEST',
+50, 30);
+
+--TODO more
 
 -- Preset users
 INSERT INTO LoginUsers (username, user_password) VALUES 
@@ -423,6 +448,3 @@ INSERT INTO Scores (user_id, gameover_time, char_name, floor, total_exp, final_l
 (1, CURRENT_TIMESTAMP, 'Jim John', 6, 530, 4, 5000),
 (1, CURRENT_TIMESTAMP, 'Mage #64.5', 5, 251, 5, 10000),
 (2, CURRENT_TIMESTAMP, 'Broke Guy', 7, 310, 2, 250);
-
--- Preset game state
---TODO

@@ -123,7 +123,7 @@ export default class Player {
         for (let i = 1; i <= 4; i++)
         {
             const key = ("item"+i+"_id")
-            if (key in gameStateData && gameStateData[key]) {//will this work...
+            if (key in gameStateData && gameStateData[key]) {
                 let newItem = new Item
                 await newItem.getFromDB(gameStateData[key], true)
                 this.items.push(newItem);
@@ -170,8 +170,6 @@ export default class Player {
             //LEVEL UP LOGIC
 
             //STATS
-            //(should some randomness be added?)
-            //TODO
             const hp_gain = this.class.hp_growth * lvl_diff
             const mp_gain = this.class.mp_growth * lvl_diff
             const str_gain = this.class.str_growth * lvl_diff
@@ -332,8 +330,6 @@ export default class Player {
         let clonedPlayer = structuredClone(data);
 
         Object.assign(clonedPlayer, functions);
-
-        //let clonedPlayer = structuredClone(this);
 
         clonedPlayer.class = this.class.clone()
         clonedPlayer.skill = this.skill.clone()
