@@ -325,6 +325,8 @@ export default class GameState {
     doBattleAction(action)
     {
         //TODO
+        //TAKES IN AN ARRAY, WITH ONE OR TWO (ITEM ID) ENTRIES
+        //OR MAYBE AN OBJECT
         //something along the lines of:
         //this.battle.doPlayerAction(action)
         //if battle ongoing, do enemy action

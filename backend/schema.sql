@@ -386,11 +386,16 @@ gold_value, rarity, equipment,  effect) VALUES
 --TODO more items
 
 -- Skills
---TODO
 INSERT INTO Skills
 (handle,        skill_name,         skill_description,      cost, effect) VALUES
-('SKILL_TEST',  'Test Skill',   'A placeholder skill',  1,    '{"test": true}'),
-('SKILL_TEST_2','Test Skill 2', 'Another placeholder skill',  2,    '{"test": true}');
+
+('SKILL_PIERCE_ARMOR_1','Pierce Armor', "Weaken the enemy's defenses. [0.8x base physical damage, reduce enemy's Defense rank by 1]",  10,
+'{"offense_modifier": 0.8, "attacks": 1, "enemy_rank": {"speed_rank": -1}}'),
+
+('SKILL_STARSTORM','Starstorm', 'Shower the enemy with a barrage of star power. [3.0x base magical damage, 3 hits, adaptive damage]',  80,
+'{"magic": true, "adaptive": true, "offense_modifier": 3.0, "attacks": 3}');
+
+--TODO more
 
 -- Classes
 INSERT INTO Classes
@@ -404,7 +409,7 @@ item1, item2, item3, item4) VALUES
 ('CLASS_WARRIOR', 'Warrior',  'Your average hotheaded, danger-seeking adventurer. Skilled with swords and other physical weapons.',  
 544,  41, 19, 17, 15, 29,   
 74,   9,  2,  2,  1,  3,          
-'SKILL_TEST', 'SKILL_TEST_2', 'SKILL_TEST_2', 'SKILL_TEST', 'SKILL_TEST', 
+'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_1', 
 'SWORD',  'MEDIUM',   
 'WPN_BRONZE_SWORD', 'ARM_LEATHER_ARMOR', null,
 'ITEM_RED_POTION', null, null, null);
@@ -422,19 +427,19 @@ gold_dropped, exp_dropped) VALUES
 ('ENEMY_MIMIC', 'Mimic',
 false,  -1,  null,
 1,  null,  0.1,   
-333,  25, 25, 25, 25, 'SKILL_TEST_2',
+333,  25, 25, 25, 25, 'SKILL_PIERCE_ARMOR_1',
 50, 25),
 
 ('ENEMY_GIANT_RAT', 'Giant Rat',
 false,  1,  10,
 1,  5,  0.05,   
-200,  25, 20, 20, 20, 'SKILL_TEST',
+200,  25, 20, 20, 20, 'SKILL_PIERCE_ARMOR_1',
 10, 10),
 
 ('ENEMY_DUNGEON_ENT', 'Dungeon Ent',
 true,  1,  20,
 5,  15,  0.05,   
-500,  30, 20, 30, 30, 'SKILL_TEST',
+500,  30, 20, 30, 30, 'SKILL_PIERCE_ARMOR_1',
 50, 30);
 
 --TODO more
@@ -445,6 +450,6 @@ INSERT INTO LoginUsers (username, user_password) VALUES
 
 -- Preset scores
 INSERT INTO Scores (user_id, gameover_time, char_name, floor, total_exp, final_level, total_value) VALUES
-(1, CURRENT_TIMESTAMP, 'Jim John', 6, 530, 4, 5000),
-(1, CURRENT_TIMESTAMP, 'Mage #64.5', 5, 251, 5, 10000),
-(2, CURRENT_TIMESTAMP, 'Broke Guy', 7, 310, 2, 250);
+(1, CURRENT_TIMESTAMP, 'Jim John', 6, 530, 5, 5000),
+(1, CURRENT_TIMESTAMP, 'Mage #64.5', 5, 251, 2, 10000),
+(2, CURRENT_TIMESTAMP, 'Broke Guy', 7, 310, 3, 250);
