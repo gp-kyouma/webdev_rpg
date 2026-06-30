@@ -384,6 +384,7 @@ export default class GameState {
         await this.battle.enemy_battler.setFromEnemyDataDB(id,boss,enemy_level)
 
         this.addToLog("A level " + this.battle.enemy_battler.level + " " + this.battle.enemy_battler.name + " draws near!")
+        this.addToLog("=== PLAYER TURN ===")
     }
 
     async goNextFloor()//this Should Not be async. but it has to be.
@@ -532,20 +533,29 @@ export default class GameState {
             this.player.items = this.player.items.toSpliced(action.item_index, 1)//removes item from inventory, hopefully this just works
 
         //if battle ongoing, do enemy action
-        if (this.battle.battle_state == Battle.BATTLE_ONGOING)
+        if (this.battle.battle_state == Battle.BATTLE_ONGOING){
+            this.addToLog("=== ENEMY TURN ===")
             this.battle.doEnemyAction()
+        }
 
         //update player's hp/mp
         this.player.current_hp = this.battle.player_battler.hp
         this.player.current_mp = this.battle.player_battler.mp
 
         switch (this.battle.battle_state) {
+            case Battle.BATTLE_ONGOING:
+                this.addToLog("=== PLAYER TURN ===")
+                break;
+
             case Battle.BATTLE_VICTORY:
+                this.addToLog("=== BATTLE END ===")
                 //get exp and gold, end battle
-                this.addToLog("Gained " + this.battle.enemy_battler.exp_dropped + " EXP!")
-                this.addToLog("Gained " + this.battle.enemy_battler.gold_dropped + " Gold!")
-                this.player.gainEXP(this.battle.enemy_battler.exp_dropped)
+                
+                this.addToLog("You gained " + this.battle.enemy_battler.gold_dropped + " Gold!")
                 this.player.gold += this.battle.enemy_battler.gold_dropped
+                
+                //this.addToLog("Gained " + this.battle.enemy_battler.exp_dropped + " EXP!")
+                this.player.gainEXP(this.battle.enemy_battler.exp_dropped)
 
                 //if was boss, set defeated flag
                 if (this.battle.enemy_battler.is_boss)
@@ -556,12 +566,14 @@ export default class GameState {
         
             case Battle.BATTLE_DEFEAT:
                 //end game
+                this.addToLog("=== BATTLE END ===")
                 this.battle = null
                 this.endGameState()
                 break;
 
             case Battle.BATTLE_ESCAPE:
                 //end battle
+                this.addToLog("=== BATTLE END ===")
                 this.battle = null
                 break;
         }
