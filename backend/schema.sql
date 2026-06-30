@@ -374,6 +374,9 @@ gold_value, rarity, equipment,  effect) VALUES
 ('ITEM_RED_POTION',  'Red Potion',  'A potion that restores vitality. [Restores HP by 50%]',
 200,  'COMMON', false,  '{"hp_restore_percent": 50}'),
 
+('ITEM_BLACK_BOMB',  'Black Bomb',  'A powerful explosive. [Deals 400 damage to an enemy]',
+400,  'COMMON', false,  '{"deal_damage": 400}'),
+
 ('ITEM_GREEN_POTION',  'Green Potion',  'A potion that greatly restores vitality. [Fully restores HP]',
 500,  'UNCOMMON', false,  '{"hp_restore_percent": 100}'),
 

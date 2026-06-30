@@ -274,10 +274,18 @@ export default class Battle {
         return Math.floor(base_damage*random_spread)
     }
 
-    changeRankStage(target, rankname, statname, change){
+    static ranknames = ["attack_rank", "defense_rank", "magic_rank", "speed_rank"]
+    static statnames = {"attack_rank":  "Attack", 
+                        "defense_rank": "Defense", 
+                        "magic_rank":   "Magic", 
+                        "speed_rank":   "Speed" }
+
+    changeRankStage(target, rankname, change){
         const target_name = target.name
         const current_rank = target.effects[rankname] ? target.effects[rankname] : 0
         const rank_limit = 2 // [-2, 2]
+
+        const statname = Battle.statnames[rankname]
 
         //prevent rank change if already at limit
         if (current_rank){
@@ -359,30 +367,25 @@ export default class Battle {
         }
 
         //Apply rank effects if any
-        const ranknames = ["attack_rank", "defense_rank", "magic_rank", "speed_rank"]
-        const statnames = { "attack_rank":  "Attack", 
-                            "defense_rank": "Defense", 
-                            "magic_rank":   "Magic", 
-                            "speed_rank":   "Speed" }
         
         if (skill.effect["user_rank"]){
             const userrank = skill.effect["user_rank"]
-            for (let i = 0; i < ranknames.length; i++){
-                const rankname = ranknames[i]
+            for (let i = 0; i < Battle.ranknames.length; i++){
+                const rankname = Battle.ranknames[i]
                 if (userrank[rankname])
-                    this.changeRankStage(attacker, rankname, statnames[rankname], userrank[rankname])
+                    this.changeRankStage(attacker, rankname, userrank[rankname])
             }
         }
         if (skill.effect["enemy_rank"] && (made_contact || num_attacks == 0)){
             const enemyrank = skill.effect["enemy_rank"]
-            for (let i = 0; i < ranknames.length; i++){
-                const rankname = ranknames[i]
+            for (let i = 0; i < Battle.ranknames.length; i++){
+                const rankname = Battle.ranknames[i]
                 if (enemyrank[rankname])
-                    this.changeRankStage(defender, rankname, statnames[rankname], enemyrank[rankname])
+                    this.changeRankStage(defender, rankname, enemyrank[rankname])
             }
         }
 
-        //TODO apply other effects? (which currently do not exist)
+        //TODO apply other effects (which currently do not exist)
     }
 
     doGuard(user){
@@ -400,9 +403,41 @@ export default class Battle {
     }
     
     useItem(item){
-        //TODO
-        this.addToLog("Used " + item.item_name + "! (It was not implemented yet...)")
-        //will just be a big switch case probably...?
+        this.addToLog("Used " + item.item_name + "!")
+        
+        if (item.effect)
+            Object.keys(item.effect).forEach(effect => {
+                const value = item.effect[effect]
+                switch (effect) {
+                    case "hp_restore_percent":
+                        this.player_battler.ChangeHP(Math.ceil(this.player_battler.max_hp * (value / 100)))
+                        this.addToLog("Recovered " + Math.ceil(this.player_battler.max_hp * (value / 100)) + " HP!")
+                        break;
+
+                    case "mp_restore_percent":
+                        this.player_battler.ChangeMP(Math.ceil(this.player_battler.max_mp * (value / 100)))
+                        this.addToLog("Recovered " + Math.ceil(this.player_battler.max_mp * (value / 100)) + " MP!")
+                        break;
+
+                    case "deal_damage":
+                        this.enemy_battler.ChangeHP(-value)
+                        this.addToLog(this.enemy_battler.name + " took " + value + " damage!")
+                        break;
+
+                    case "attack_rank":
+                    case "defense_rank":
+                    case "magic_rank":
+                    case "speed_rank":
+                        this.changeRankStage(this.player_battler, effect, value)
+                        break;
+
+                    //TODO more item effects
+                
+                    default:
+                        console.log("Item effect " + effect + " currently unimplemented")
+                        break;
+                }
+            });
     }
 
     checkBattleState(){

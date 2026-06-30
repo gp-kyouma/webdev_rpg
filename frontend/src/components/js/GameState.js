@@ -502,6 +502,14 @@ export default class GameState {
         return this.map_data[y][x]
     }
 
+    get healCost(){
+        if (this.player.current_hp == this.player.totalMaxHP)
+            return 0
+        
+        const damage_ratio = 1.0 - (this.player.current_hp / this.player.totalMaxHP)
+        return Math.floor(this.player.gold * 0.5 * damage_ratio)
+    }
+
     buyItem(index){
         //TODO
     }
