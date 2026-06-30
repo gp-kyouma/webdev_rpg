@@ -502,16 +502,66 @@ export default class GameState {
         return this.map_data[y][x]
     }
 
-    get healCost(){
-        if (this.player.current_hp == this.player.totalMaxHP)
-            return 0
-        
-        const damage_ratio = 1.0 - (this.player.current_hp / this.player.totalMaxHP)
-        return Math.floor(this.player.gold * 0.5 * damage_ratio)
+    buyFullHeal(){
+        if (this.player.current_hp == this.player.totalMaxHP){
+            this.addToLog("Already at max HP!")
+            return
+        }
+
+        if (!this.player.canAfford(this.player.healCost)){
+            this.addToLog("You can't afford this!")
+            return
+        }
+
+        this.player.gold -= this.player.healCost
+
+        this.player.current_hp = this.player.totalMaxHP
+        this.addToLog("Fully healed HP!")
     }
 
     buyItem(index){
-        //TODO
+
+        const item = this.shop_items[index]
+        let price = item.gold_value
+
+        if (item.equipment){
+            const current_equip = this.player.getEquipSlot(item.equip_slot)
+            if (current_equip){
+                price = price - current_equip.sell_value//discount
+                if (current_equip.handle == item.handle){
+                    //same item, do not sell
+                    this.addToLog("You already have this equipment!")
+                    return
+                }
+            }
+        }
+        else{
+            if (!this.player.hasInventorySpace){
+                this.addToLog("Your inventory is full!")
+                return
+            }
+        }
+
+        if (!this.player.canAfford(price)){
+            this.addToLog("You can't afford this!")
+            return
+        }
+
+        this.player.gold -= price
+
+        if (item.equipment){
+            if (item.equip_slot == "WEAPON")
+                this.player.weapon = item.clone()
+            else if (item.equip_slot == "ARMOR")
+                this.player.armor = item.clone()
+            else if (item.equip_slot == "ACCESSORY")
+                this.player.accessory = item.clone()
+        }
+        else{
+            this.player.items.push(item.clone())
+        }
+
+        this.addToLog(item.item_name + " purchased!")
     }
 
     sellItem(index){

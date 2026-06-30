@@ -93,6 +93,10 @@ export default class Item {
         return !isObjectEmpty(this.effect);
     }
 
+    get sell_value(){
+        return Math.floor(this.gold_value / 2)
+    }
+
     static rollRarity(){
         //const common_rarity     = 60//redundant
         const uncommon_rarity   = 25

@@ -243,6 +243,42 @@ export default class Player {
         return (this.items.length < 4);
     }
 
+    get healCost(){
+        if (this.current_hp == this.totalMaxHP)
+            return 0
+
+        const damage_ratio = 1.0 - (this.current_hp / this.totalMaxHP)
+
+        let base_price = 500
+        base_price = ((this.gold * 0.5) > base_price) ? (this.gold * 0.5) : base_price
+
+        return Math.ceil(base_price * damage_ratio)
+    }
+
+    canAfford(price){
+        return this.gold >= price
+    }
+
+    getEquipSlot(equip_slot){
+        let ret = null
+        if (equip_slot == "WEAPON" && this.hasWeapon)
+            ret = this.weapon
+        else if (equip_slot == "ARMOR" && this.hasArmor)
+            ret = this.armor
+        else if (equip_slot == "ACCESSORY" && this.hasAccessory)
+            ret = this.accessory
+        return ret
+    }
+
+    discountEquipPrice(equip_slot, price){
+        let equipped = this.getEquipSlot(equip_slot)
+
+        if (!equipped)
+            return price
+
+        return price - equipped.sell_value
+    }
+
     //calculate "true" stat values by adding character stats + equip stats
     get totalMaxHP(){
         return this.max_hp  + (this.hasWeapon && this.weapon.hp ? this.weapon.hp : 0) 

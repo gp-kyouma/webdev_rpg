@@ -40,12 +40,12 @@ export default function HoverableItem({data, compare = null}) {
         let mag_stat
         let spd_stat
         if (compare){
-            const hp_diff  = compare.hp  - data.hp
-            const mp_diff  = compare.mp  - data.mp
-            const str_diff = compare.str - data.str
-            const def_diff = compare.def - data.def
-            const mag_diff = compare.mag - data.mag
-            const spd_diff = compare.spd - data.spd
+            const hp_diff  = data.hp - compare.hp
+            const mp_diff  = data.mp - compare.mp
+            const str_diff = data.str - compare.str
+            const def_diff = data.def - compare.def
+            const mag_diff = data.mag - compare.mag
+            const spd_diff = data.spd - compare.spd
 
             hp_stat = <StatDiff data={data.hp} diff={hp_diff} label={"HP"}/>
             mp_stat = <StatDiff data={data.mp} diff={mp_diff} label={"MP"}/>
