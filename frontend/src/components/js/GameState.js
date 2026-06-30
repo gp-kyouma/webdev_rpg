@@ -1,14 +1,16 @@
 import Player from './Player';
 import Item from './Item';
-//import Battle from './Battle';
+import Battle from './Battle';
 import * as db from './DatabaseCRUD';
 import * as maputils from './MapUtils.js'
+import { clamp, getRandomInt } from './utils.js';
 
 export default class GameState {
 
     constructor() { // "empty" state
 
         this.game_over = false
+        this.no_update = false//i don't think this works as intended actually. thanks async very cool.
         
         this.id = 0
         this.user_id = 0
@@ -22,7 +24,7 @@ export default class GameState {
         this.shop_items = []
 
         this.chest_item = null
-        this.chest_active = false
+        this.chest_active = true
         this.is_mimic = false
 
         this.boss_id = null//in hindsight this should not be allowed to be null but shh
@@ -33,10 +35,7 @@ export default class GameState {
 
         this.battle = null
 
-        //possible things to add:
-        //cache of possible encounters on this floor? then i wouldn't need to query database every step
-        //bet
-        //probably just save handles here
+        //cache of possible encounters on this floor
         this.encounter_table = []
     }
 
@@ -54,8 +53,7 @@ export default class GameState {
                 result[key] = this.shop_items[i-1].id
             }
 
-        if (this.chest_item)//this is only here because i haven't implemented chest item yet, remove later
-            result.chest_id = this.chest_item.id
+        result.chest_id = this.chest_item.id
         result.is_mimic = this.is_mimic ? 1 : 0 // must be an integer lol?
 
         result.boss_id = this.boss_id
@@ -122,10 +120,10 @@ export default class GameState {
         this.id = 0
         this.user_id = newCharData.user_id
 
-        this.floor = 1
-        this.generateNewFloor()
-
         await this.player.startNewChar(newCharData)
+
+        this.floor = 1
+        await this.generateNewFloor()
 
         //create entry in gamestate database
         await db._create('game-states',this.prepareDatabaseEntry())
@@ -154,7 +152,7 @@ export default class GameState {
         for (let i = 1; i <= 4; i++)
         {
             const key = ("shop"+i+"_id")
-            if (key in ongame && ongame[key]) {//will this work...
+            if (key in ongame && ongame[key]) {
                 let newItem = new Item
                 await newItem.getFromDB(ongame[key], true)
                 this.shop_items.push(newItem);
@@ -173,16 +171,21 @@ export default class GameState {
         this.boss_level = ongame.boss_level
 
         await this.player.setFromGameState(ongame)
+
+        await this.setEncounterTable()
     }
 
     async saveGameState()
     {
+        this.no_update = true
         await db._update('game-states',this.id,this.prepareDatabaseEntry())
         this.addToLog("Game state saved!")
+        this.no_update = false
     }
 
     async endGameState()
     {
+        this.no_update = true
         //create entry in score database
         await db._create('scores',this.prepareScoreEntry())
 
@@ -193,6 +196,46 @@ export default class GameState {
         this.addToLog("Game over! (Score saved to leaderboards)")
     }
 
+    async setEncounterTable() {
+        const all_nonboss_enemies = await db._get('enemy-data',{is_boss: 0})
+
+        //manually filter (cringe but necessary)
+        const floor_enemies = all_nonboss_enemies.filter(enemy =>   enemy.handle != "ENEMY_MIMIC" && 
+                                                                    enemy.starting_floor <= this.floor && 
+                                                                    (enemy.stopping_floor ? (enemy.stopping_floor >= this.floor) : true));
+        const handles = floor_enemies.map(enemy => enemy.handle);
+
+        this.encounter_table = handles
+    };
+
+    async generateBoss(){
+        const all_boss_enemies = await db._get('enemy-data',{is_boss: 1})
+
+        //manually filter (cringe but necessary)
+        const possible_bosses = all_boss_enemies.filter(enemy =>enemy.starting_floor <= this.floor && 
+                                                                (enemy.stopping_floor ? (enemy.stopping_floor >= this.floor) : true));
+
+        let chosen_boss
+        
+        if (possible_bosses.length == 0){//if somehow there's no bosses for this floor, get a random one
+            chosen_boss = all_boss_enemies[getRandomInt(0,all_boss_enemies.length)]
+        }
+        else{
+            chosen_boss = possible_bosses[getRandomInt(0,possible_bosses.length)]
+        }
+
+        //calculates boss level
+        if (!chosen_boss.max_level)
+            chosen_boss.max_level = 9999//quickfix
+
+        const level_variation = 2
+        const boss_level = clamp(this.floor + getRandomInt(-level_variation,level_variation), chosen_boss.base_level, chosen_boss.max_level)
+
+        this.boss_id = chosen_boss.id
+        this.boss_level = boss_level
+        this.boss_defeated = false
+    }
+
     addToLog(str)
     {
         if (this.log_)
@@ -201,38 +244,156 @@ export default class GameState {
             console.log("[gamestate] Log function not set (str was " + str + ")")
     }
 
-    generateNewFloor()
+    async generateRandomItem()
     {
+        let query_params = {}
+
+        console.log("=== NEW ITEM ROLL ===")//debug
+
+        const equip_chance = 33
+        const equip_roll = getRandomInt(0,100)
+        const is_equip = equip_roll < equip_chance
+
+        console.log("EQUIPMENT ROLL: " + equip_roll)//debug
+
+        query_params.equipment = is_equip ? 1 : 0;//has to be 0/1 for query
+
+        if (is_equip){
+            // 40% chance for weapon, 40% chance for armor, 20% chance for accessory
+
+            const acc_chance = 20
+            const arm_chance = 40
+            //remaining is wpn_chance
+
+            let chosen_slot
+            const slotroll = getRandomInt(0,100)
+            if (slotroll < acc_chance)
+                chosen_slot = "ACCESSORY"
+            else if (slotroll < acc_chance + arm_chance)
+                chosen_slot = "ARMOR"
+            else
+                chosen_slot = "WEAPON"
+
+            query_params.equip_slot = chosen_slot
+
+            console.log("SLOT ROLL: " + slotroll)//debug
+
+            // if weapon or armor:
+            // 80% chance for same type as class (staff/sword/etc, light/heavy/etc), 20% random type
+            const class_type_chance = 80
+            const typeroll = getRandomInt(0,100)
+            const use_class_type = typeroll < class_type_chance
+            
+            if (use_class_type && chosen_slot == "WEAPON")
+                query_params.equip_type = this.player.class.weapon_type
+            else if (use_class_type && chosen_slot == "ARMOR")
+                query_params.equip_type = this.player.class.armor_type
+
+            console.log("TYPE ROLL: " + typeroll)//debug
+        }
+        
+        // then roll rarity
+        query_params.rarity = Item.rollRarity()
+
+        console.log(query_params)//debug
+
+        // then do proper query and pick randomly from received array
+        const possible_items = await db._get('items',query_params)
+        const random_index = getRandomInt(0,possible_items.length)
+
+        if (possible_items.length == 0)
+            return null
+
+        const chosen_item = possible_items[random_index]
+
+        let newItem = new Item
+        newItem.setFromItemData(chosen_item)
+        return newItem
+    }
+
+    async generateShop(){
+        this.shop_items = []
+        for (let i = 0; i < 4; i++){
+            const new_item = await this.generateRandomItem()
+            if (new_item != null)
+                this.shop_items.push(new_item)
+        }
+    }
+
+    async generateChest(){
+        this.chest_item = await this.generateRandomItem()
+        if (this.chest_item != null)
+            this.chest_active = true
+        else
+            this.chest_active = false
+
+        //roll for mimic
+        const mimic_chance = 20
+        const mimic_roll = getRandomInt(0,100)
+        console.log("MIMIC ROLL: " + mimic_roll)//debug
+        this.is_mimic = mimic_roll < mimic_chance
+    }
+
+    async generateNewFloor()//sadly this has to be async. tragic. top 10 saddest javascript moments.
+    {
+        this.no_update = true
+
         this.pos = [4,4]
         this.map_data = maputils.GenerateMap(this.floor)
         this.view_data = maputils.EmptyMap()
         this.movePlayer('')
 
-        //TODO item generation
-        this.shop_items = []
+        //shop item generation
+        await this.generateShop()
 
-        //TODO chest generation
-        this.chest_item = null
-        this.chest_active = false
-        this.is_mimic = false
+        //chest generation
+        await this.generateChest()
 
-        //TODO boss generation
-        this.boss_id = null
-        this.boss_level = 0
-        this.boss_defeated = false
+        //boss generation
+        await this.generateBoss()
 
-        //TODO all of this
-        this.encounter_table = []
+        await this.setEncounterTable()
+
+        this.no_update = false
     }
 
-    goNextFloor()
+    doRandomEncounter()
+    {
+        if (this.encounter_table.length == 0)
+            return
+
+        const enemy_handle = this.encounter_table[getRandomInt(0,this.encounter_table.length)]
+
+        //random chance
+        const encounter_chance = 20
+        const encounter_roll = getRandomInt(0,100)
+        console.log("ENCOUNTER ROLL: " + encounter_roll)//debug
+        if (encounter_roll < encounter_chance)
+            this.startBattleEncounter(enemy_handle, false)//THIS IS ASYNC!!!
+    }
+    
+    async startBattleEncounter(id, boss)
+    {
+        this.battle = new Battle
+        this.battle.log_ = this.log_
+
+        const enemy_level = boss ? this.boss_level : this.floor
+
+        this.battle.player_battler.setFromPlayerData(this.player)
+
+        await this.battle.enemy_battler.setFromEnemyDataDB(id,boss,enemy_level)
+
+        this.addToLog("A level " + this.battle.enemy_battler.level + " " + this.battle.enemy_battler.name + " draws near!")
+    }
+
+    async goNextFloor()//this Should Not be async. but it has to be.
     {
         this.floor++
         this.addToLog("Moving to floor " + this.floor + "...")
-        this.generateNewFloor()
+        await this.generateNewFloor()
 
         //SAVES GAME TO DATABASE
-        this.saveGameState()
+        await this.saveGameState()
     }
 
     movePlayer(direction)
@@ -296,13 +457,36 @@ export default class GameState {
 
         this.pos = [x,y]
 
-        if (direction != '')
+        if (direction != ''){
             this.addToLog("You moved "+dirFull+".")
 
-        // if is a standard tile, random chance to start encounter
-        //TODO
-        // else if is a special tile, add relevant line to log
-        //TODO
+            //recover 5% MP per step
+            const mp_restore = 0.05
+            this.player.current_mp += Math.ceil(this.player.totalMaxMP * mp_restore)
+            this.player.current_mp = clamp(this.player.current_mp, 0, this.player.totalMaxMP)
+
+            switch (this.currentTile) {
+                // if is a default tile, random chance to start encounter
+                case maputils.TileTypes.DEFAULT:
+                    this.doRandomEncounter()
+                    break;
+
+                // else if is a special tile, add relevant line to log
+                case maputils.TileTypes.TREASURE:
+                    this.addToLog("You are inside a small room, with a" + (this.chest_active ? "" : "n opened") + " chest at the center.")
+                    break;
+            
+                case maputils.TileTypes.SHOP:
+                    this.addToLog("Welcome to the Floor " + this.floor + " Shop!")
+                    break;
+
+                case maputils.TileTypes.BOSS:
+                    this.addToLog("You arrive at a large chamber, with a staircase leading to the next floor.")
+                    if (!this.boss_defeated)
+                        this.addToLog("A level " + this.boss_level + " boss monster stands between you and the floor exit...")
+                    break;
+            }
+        }
 
         return true
     }
@@ -312,43 +496,75 @@ export default class GameState {
         return this.map_data[y][x]
     }
 
+    buyItem(index){
+        //TODO
+    }
+
+    sellItem(index){
+        //TODO
+    }
+
     openChest()
     {
         //TODO
     }
 
-    fightBoss()
+    async fightBoss()
     {
-        //TODO
+        await this.startBattleEncounter(this.boss_id, true)
     }
 
     doBattleAction(action)
     {
-        //TODO
-        //TAKES IN AN ARRAY, WITH ONE OR TWO (ITEM ID) ENTRIES
-        //OR MAYBE AN OBJECT
-        //something along the lines of:
-        //this.battle.doPlayerAction(action)
-        //if battle ongoing, do enemy action
-        //switch (this.battle.state){
-        //case won: etc
-        //case died: etc
-        //case escaped: etc
-        //}
-        //and so on
-    }
+        //TAKES IN AN OBJECT
 
-    //debug, remove later
-    doKillBoss()
-    {
-        this.boss_defeated = true
-        this.addToLog("You destroyed the boss enemy (which does not exist) with your powers (which also do not exist).")
-    }
-    //debug, remove later
-    gainEXP(exp)
-    {
-        this.addToLog("You're about to gain "+exp+" EXP for no reason!")
-        this.player.gainEXP(exp)
+        if (!this.battle)
+            return
+
+        const action_name = action.name
+        let used_item = null
+        if (Object.hasOwn(action, 'item_index'))
+            used_item = this.player.items[action.item_index]
+        const item_was_used = !(used_item == null)
+
+        this.battle.doPlayerAction(action_name, used_item)
+        if (item_was_used)
+            this.player.items = this.player.items.toSpliced(action.item_index, 1)//removes item from inventory, hopefully this just works
+
+        //if battle ongoing, do enemy action
+        if (this.battle.battle_state == Battle.BATTLE_ONGOING)
+            this.battle.doEnemyAction()
+
+        //update player's hp/mp
+        this.player.current_hp = this.battle.player_battler.hp
+        this.player.current_mp = this.battle.player_battler.mp
+
+        switch (this.battle.battle_state) {
+            case Battle.BATTLE_VICTORY:
+                //get exp and gold, end battle
+                this.addToLog("Gained " + this.battle.enemy_battler.exp_dropped + " EXP!")
+                this.addToLog("Gained " + this.battle.enemy_battler.gold_dropped + " Gold!")
+                this.player.gainEXP(this.battle.enemy_battler.exp_dropped)
+                this.player.gold += this.battle.enemy_battler.gold_dropped
+
+                //if was boss, set defeated flag
+                if (this.battle.enemy_battler.is_boss)
+                    this.boss_defeated = true
+
+                this.battle = null
+                break;
+        
+            case Battle.BATTLE_DEFEAT:
+                //end game
+                this.battle = null
+                this.endGameState()
+                break;
+
+            case Battle.BATTLE_ESCAPE:
+                //end battle
+                this.battle = null
+                break;
+        }
     }
 
     //cloning business.
@@ -377,12 +593,23 @@ export default class GameState {
         Object.assign(clonedData, functions);
 
         //manually clone and assign the attributes that are classes
+
+        //player
         clonedData.player = this.player.clone();
 
-        //todo attributes
         //shop_items
+        clonedData.shop_items = []
+        for (let i = 0; i < this.shop_items.length; i++)
+        {
+            clonedData.shop_items.push(this.shop_items[i].clone())
+        }
+
         //chest_item
+        clonedData.chest_item = this.chest_item.clone()
+
         //battle
+        if (this.battle)
+            clonedData.battle = this.battle.clone()
 
         return Object.setPrototypeOf(clonedData, GameState.prototype);
     }

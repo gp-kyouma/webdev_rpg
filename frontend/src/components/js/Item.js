@@ -99,19 +99,16 @@ export default class Item {
         const rare_rarity       = 10
         const legendary_rarity  = 5
 
-        let roll = getRandomInt(0, 100)
+        const roll = getRandomInt(0, 100)
+        console.log("RARITY ROLL: " + roll)//debug
 
         if (roll < legendary_rarity)
             return "LEGENDARY"
 
-        roll =- legendary_rarity
-
-        if (roll < rare_rarity)
+        else if (roll < rare_rarity + legendary_rarity)
             return "RARE"
 
-        roll =- rare_rarity
-
-        if (roll < uncommon_rarity)
+        else if (roll < uncommon_rarity + rare_rarity + legendary_rarity)
             return "UNCOMMON"
 
         return "COMMON"

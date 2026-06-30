@@ -389,8 +389,36 @@ gold_value, rarity, equipment,  effect) VALUES
 INSERT INTO Skills
 (handle,        skill_name,         skill_description,      cost, effect) VALUES
 
+('SKILL_LUNGE','Lunge', "A stronger physical attack. [1.1x base physical damage]",  6,
+'{"offense_modifier": 1.1, "attacks": 1}'),
+
+
+
 ('SKILL_PIERCE_ARMOR_1','Pierce Armor', "Weaken the enemy's defenses. [0.8x base physical damage, reduce enemy's Defense rank by 1]",  10,
-'{"offense_modifier": 0.8, "attacks": 1, "enemy_rank": {"speed_rank": -1}}'),
+'{"offense_modifier": 0.8, "attacks": 1, "enemy_rank": {"defense_rank": -1}}'),
+
+('SKILL_PIERCE_ARMOR_2','Pierce Armor+', "Weaken the enemy's defenses. [1.0x base physical damage, reduce enemy's Defense rank by 1]",  20,
+'{"offense_modifier": 1.0, "attacks": 1, "enemy_rank": {"defense_rank": -1}}'),
+
+('SKILL_PIERCE_ARMOR_3','Pierce Armor++', "Weaken the enemy's defenses. [1.2x base physical damage, reduce enemy's Defense rank by 1]",  35,
+'{"offense_modifier": 1.2, "attacks": 1, "enemy_rank": {"defense_rank": -1}}'),
+
+('SKILL_PIERCE_ARMOR_4','Shred Armor', "Greatly weaken the enemy's defenses. [1.2x base physical damage, reduce enemy's Defense rank by 2]",  60,
+'{"offense_modifier": 1.2, "attacks": 1, "enemy_rank": {"defense_rank": -2}}'),
+
+
+
+('SKILL_FIRE','Fire', "A basic fireball attack. [1.5x base magical damage]",  15,
+'{"magic": true, "offense_modifier": 1.5, "attacks": 1}'),
+
+('SKILL_BLAZE','Blaze', "A stronger fireball variant. [2.5x base magical damage]",  30,
+'{"magic": true, "offense_modifier": 2.5, "attacks": 1}'),
+
+('SKILL_DUAL_BOLT','Dual Bolt', "Strikes the enemy twice with lightning. [2.0x base magical damage, 2 hits]",  45,
+'{"magic": true, "offense_modifier": 2.0, "attacks": 2}'),
+
+('SKILL_GRAVITY','Gravity', "Crush the enemy under their own weight. [3.5x base magical damage, adaptive damage]",  65,
+'{"magic": true, "adaptive": true, "offense_modifier": 3.5, "attacks": 1}'),
 
 ('SKILL_STARSTORM','Starstorm', 'Shower the enemy with a barrage of star power. [3.0x base magical damage, 3 hits, adaptive damage]',  80,
 '{"magic": true, "adaptive": true, "offense_modifier": 3.0, "attacks": 3}');
@@ -409,7 +437,7 @@ item1, item2, item3, item4) VALUES
 ('CLASS_WARRIOR', 'Warrior',  'Your average hotheaded, danger-seeking adventurer. Skilled with swords and other physical weapons.',  
 544,  41, 19, 17, 15, 29,   
 74,   9,  2,  2,  1,  3,          
-'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_1', 
+'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_2', 'SKILL_PIERCE_ARMOR_3', 'SKILL_PIERCE_ARMOR_3', 'SKILL_PIERCE_ARMOR_4', 
 'SWORD',  'MEDIUM',   
 'WPN_BRONZE_SWORD', 'ARM_LEATHER_ARMOR', null,
 'ITEM_RED_POTION', null, null, null);
@@ -427,19 +455,19 @@ gold_dropped, exp_dropped) VALUES
 ('ENEMY_MIMIC', 'Mimic',
 false,  -1,  null,
 1,  null,  0.1,   
-333,  25, 25, 25, 25, 'SKILL_PIERCE_ARMOR_1',
+333,  25, 25, 25, 25, 'SKILL_LUNGE',
 50, 25),
 
 ('ENEMY_GIANT_RAT', 'Giant Rat',
 false,  1,  10,
 1,  5,  0.05,   
-200,  25, 20, 20, 20, 'SKILL_PIERCE_ARMOR_1',
+200,  25, 20, 20, 20, 'SKILL_LUNGE',
 10, 10),
 
 ('ENEMY_DUNGEON_ENT', 'Dungeon Ent',
 true,  1,  20,
 5,  15,  0.05,   
-500,  30, 20, 30, 30, 'SKILL_PIERCE_ARMOR_1',
+500,  30, 20, 30, 30, 'SKILL_FIRE',
 50, 30);
 
 --TODO more

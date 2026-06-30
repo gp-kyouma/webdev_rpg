@@ -77,8 +77,9 @@ class EnemyDataSearch extends EnemyData
             'exp_dropped' => $this->exp_dropped,
         ]);
 
-        $query->andFilterWhere(['like', 'handle', $this->handle])
-            ->andFilterWhere(['like', 'enemy_name', $this->enemy_name])
+        $query->andFilterWhere(['handle' => $this->handle]);
+
+        $query->andFilterWhere(['like', 'enemy_name', $this->enemy_name])
             ->andFilterWhere(['like', 'skill', $this->skill]);
 
         return $dataProvider;

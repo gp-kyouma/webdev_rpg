@@ -64,8 +64,9 @@ class SkillsSearch extends Skills
             'cost' => $this->cost,
         ]);
 
-        $query->andFilterWhere(['like', 'handle', $this->handle])
-            ->andFilterWhere(['like', 'skill_name', $this->skill_name])
+        $query->andFilterWhere(['handle' => $this->handle]);
+
+        $query->andFilterWhere(['like', 'skill_name', $this->skill_name])
             ->andFilterWhere(['like', 'skill_description', $this->skill_description])
             ->andFilterWhere(['like', 'effect', $this->effect]);
 

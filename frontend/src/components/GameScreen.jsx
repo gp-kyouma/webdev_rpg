@@ -7,6 +7,7 @@ import BossRoomScreen from './BossRoomScreen';
 import PlayerInfo from './PlayerInfo';
 
 import GameState from './js/GameState';
+import BattleScreen from './BattleScreen';
 
 function Log({logData}) {
     
@@ -58,7 +59,7 @@ export default function GameScreen({data, setData, quit}) {
     
     async function applyToData(method,params)
     {
-        if (!data.game_over) // once game is over, block all methods
+        if (!data.game_over && !data.no_update) // once game is over, block all methods
         {
             let newdata = data.clone()
             await newdata[method](params);
@@ -68,37 +69,38 @@ export default function GameScreen({data, setData, quit}) {
 
     useEffect(() => {
         let newdata = data.clone()
-        newdata.log_ = (str) => { setLog(prev => [...prev, str]); }
-        newdata.player.log_ = (str) => { setLog(prev => [...prev, str]); }
+        const log_function = (str) => { setLog(prev => [...prev, str]); }
+        newdata.log_ = log_function
+        newdata.player.log_ = log_function
         setData(newdata)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    let actionsScreen = null
+    let actionsScreen
     if (data.battle){
-        //todo battle screen
+        actionsScreen = <BattleScreen data={data} apply={applyToData}/>
     }
     else{
         actionsScreen = <MovementWidget pos={data.pos} apply={applyToData}/>
     }
 
     let currentTileScreen = null
-    switch (data.currentTile) {
-        case TileTypes.TREASURE:
-            //placeholder to test exp gain
-            currentTileScreen = <button type="button" onClick={() => applyToData("gainEXP",7)} > Gain 7 EXP For No Reason </button>
-            //todo treasure screen
-            break;
+    if (!data.battle)
+        switch (data.currentTile) {
+            case TileTypes.TREASURE:
+                currentTileScreen = null
+                //todo treasure screen
+                break;
 
-        case TileTypes.SHOP:
-            currentTileScreen = <p>lamp oil rope bombs you want it (placeholder)</p>
-            //todo shop screen
-            break;
+            case TileTypes.SHOP:
+                currentTileScreen = <p>lamp oil rope bombs you want it (placeholder)</p>
+                //todo shop screen
+                break;
 
-        case TileTypes.BOSS:
-            currentTileScreen = <BossRoomScreen data={data} apply={applyToData}/>
-            break;
-    }
+            case TileTypes.BOSS:
+                currentTileScreen = <BossRoomScreen data={data} apply={applyToData}/>
+                break;
+        }
 
     return (
         <>

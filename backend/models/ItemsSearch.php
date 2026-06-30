@@ -71,13 +71,15 @@ class ItemsSearch extends Items
             'spd' => $this->spd,
         ]);
 
-        $query->andFilterWhere(['like', 'handle', $this->handle])
-            ->andFilterWhere(['like', 'item_name', $this->item_name])
+        $query->andFilterWhere(['handle' => $this->handle]);
+
+        $query->andFilterWhere(['rarity' => $this->rarity]);
+        $query->andFilterWhere(['equip_slot' => $this->equip_slot]);
+        $query->andFilterWhere(['equip_type' => $this->equip_type]);
+
+        $query->andFilterWhere(['like', 'item_name', $this->item_name])
             ->andFilterWhere(['like', 'item_description', $this->item_description])
-            ->andFilterWhere(['like', 'rarity', $this->rarity])
-            ->andFilterWhere(['like', 'effect', $this->effect])
-            ->andFilterWhere(['like', 'equip_slot', $this->equip_slot])
-            ->andFilterWhere(['like', 'equip_type', $this->equip_type]);
+            ->andFilterWhere(['like', 'effect', $this->effect]);
 
         return $dataProvider;
     }

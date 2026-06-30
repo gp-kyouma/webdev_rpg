@@ -7,6 +7,7 @@ export class Battler {
     constructor() { // "empty" battler
 
         this.name = ""
+        this.level = 0
 
         this.is_boss = false
 
@@ -30,7 +31,7 @@ export class Battler {
         this.effects = {}
     }
 
-    async setFromEnemyDataDB(handle, useID = false, currentFloor = 1) {
+    async setFromEnemyDataDB(handle, useID = false, expectedLevel = 1) {
         let search_term;
         if (useID)
             search_term = { id: handle }
@@ -61,6 +62,7 @@ export class Battler {
         //ALSO AFFECTS DROPS
         //starting_floor, stopping_floor,
         //base_level, max_level,  level_up_factor,
+        this.level = expectedLevel//TODO
 
         //TODO
 
@@ -78,7 +80,8 @@ export class Battler {
 
     setFromPlayerData(player)
     {
-        this.name = player.name
+        this.name = player.name +" the "+ player.class.class_name
+        this.level = player.lvl
 
         this.max_hp = player.totalMaxHP
         this.hp = player.current_hp
@@ -128,16 +131,16 @@ export class Battler {
 
     // (Stat * rank modifier) getters
     get effectiveStr() {
-        return this.str * this.GetRankModifier("attack_rank");
+        return Math.round(this.str * this.GetRankModifier("attack_rank"));
     }
     get effectiveDef() {
-        return this.def * this.GetRankModifier("defense_rank");
+        return Math.round(this.def * this.GetRankModifier("defense_rank"));
     }
     get effectiveMag() {
-        return this.mag * this.GetRankModifier("magic_rank");
+        return Math.round(this.mag * this.GetRankModifier("magic_rank"));
     }
     get effectiveSpd() {
-        return this.spd * this.GetRankModifier("speed_rank");
+        return Math.round(this.spd * this.GetRankModifier("speed_rank"));
     }
 
     get effectiveSkillCost(){
@@ -149,7 +152,7 @@ export class Battler {
         return skill_cost
     }
     get canUseSkill(){
-        return this.effectiveSkillCost >= this.mp
+        return this.mp >= this.effectiveSkillCost 
     }
     get usesMP(){
         return this.max_mp != -1
@@ -335,12 +338,15 @@ export default class Battle {
 
         let num_attacks = skill.effect["attacks"] ? skill.effect["attacks"] : 0
 
+        let made_contact = false
+
         for (let i = 0; i < num_attacks; i++){
             if (defender.isDead)
                 continue
 
             const hit = Battle.calculateHit(attacker, defender)
             if (hit){
+                made_contact = true
                 const damage = Battle.calculateAttackDamage(attacker, defender, skill.effect)
                 defender.ChangeHP(-damage)
                 this.addToLog(defender.name + " took " + damage + " damage!")
@@ -364,7 +370,7 @@ export default class Battle {
                     this.changeRankStage(attacker, rankname, statnames[rankname], userrank[rankname])
             }
         }
-        if (skill.effect["enemy_rank"]){
+        if (skill.effect["enemy_rank"] && (made_contact || num_attacks == 0)){
             const enemyrank = skill.effect["enemy_rank"]
             for (let i = 0; i < ranknames.length; i++){
                 const rankname = ranknames[i]
@@ -377,6 +383,7 @@ export default class Battle {
     }
 
     doGuard(user){
+        this.addToLog(user.name + " is guarding!")
         user.effects["guarding"] = true
 
         const mp_restore = 0.25

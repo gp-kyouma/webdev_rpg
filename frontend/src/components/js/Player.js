@@ -178,14 +178,14 @@ export default class Player {
             const spd_gain = this.class.spd_growth * lvl_diff
 
             //maintain hp ratio on level up
-            const hp_ratio = this.current_hp / this.max_hp
-            const mp_ratio = this.current_mp / this.max_mp
+            const hp_ratio = this.current_hp / this.totalMaxHP
+            const mp_ratio = this.current_mp / this.totalMaxMP
 
             this.max_hp += hp_gain
             this.max_mp += mp_gain
 
-            this.current_hp = this.max_hp * hp_ratio
-            this.current_mp = this.max_mp * mp_ratio
+            this.current_hp = Math.round(this.totalMaxHP * hp_ratio)
+            this.current_mp = Math.round(this.totalMaxMP * mp_ratio)
 
             this.str += str_gain
             this.def += def_gain

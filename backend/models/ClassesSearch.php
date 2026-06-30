@@ -75,8 +75,9 @@ class ClassesSearch extends Classes
             'spd_growth' => $this->spd_growth,
         ]);
 
-        $query->andFilterWhere(['like', 'handle', $this->handle])
-            ->andFilterWhere(['like', 'class_name', $this->class_name])
+        $query->andFilterWhere(['handle' => $this->handle]);
+
+        $query->andFilterWhere(['like', 'class_name', $this->class_name])
             ->andFilterWhere(['like', 'class_description', $this->class_description])
             ->andFilterWhere(['like', 'skill_1', $this->skill_1])
             ->andFilterWhere(['like', 'skill_5', $this->skill_5])

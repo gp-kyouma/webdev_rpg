@@ -1,11 +1,6 @@
 import HoverableItem from "./HoverableItem"
 
-export default function PlayerInfo({data, apply}) {
-
-    //const applyToData = (method, params) => apply(method,params);
-    
-    //if items can be used outside of combat this needs to be revisited
-    //also if can sell items in shop
+export default function PlayerInfo({data}) {
     
     const wpn_name = data.weapon ? <>Weapon: <HoverableItem data={data.weapon}/></> : <>Weapon: (None)</>
     const arm_name = data.armor ? <>Armor: <HoverableItem data={data.armor}/></> : <>Armor: (None)</>
