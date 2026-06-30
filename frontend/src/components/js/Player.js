@@ -239,6 +239,10 @@ export default class Player {
         return !(this.items?.length === 0);
     }
 
+    get hasInventorySpace() {
+        return (this.items.length < 4);
+    }
+
     //calculate "true" stat values by adding character stats + equip stats
     get totalMaxHP(){
         return this.max_hp  + (this.hasWeapon && this.weapon.hp ? this.weapon.hp : 0) 

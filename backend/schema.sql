@@ -380,8 +380,8 @@ gold_value, rarity, equipment,  effect) VALUES
 ('ITEM_GOLDEN_ELIXIR',  'Golden Elixir',  'A super-potion that fully revitalizes the user. [Fully restores HP and MP]',
 1200, 'RARE', false,  '{"hp_restore_percent": 100, "mp_restore_percent": 100}'),
 
-('ITEM_LUSTER_CANDY',  'Luster Candy',  'A mysterious, shining confection. [During battle, +1 ALL ranks]',
-3000, 'LEGENDARY', false,  '{"battle_only": true, "attack_rank": 1, "defense_rank": 1, "magic_rank": 1, "speed_rank": 1}');
+('ITEM_LUSTER_CANDY',  'Luster Candy',  'A mysterious, shining confection. [+1 ALL ranks]',
+3000, 'LEGENDARY', false,  '{"attack_rank": 1, "defense_rank": 1, "magic_rank": 1, "speed_rank": 1}');
 
 --TODO more items
 

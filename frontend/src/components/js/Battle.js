@@ -58,24 +58,27 @@ export class Battler {
         this.skill = new Skill
         await this.skill.getFromDB(enemy.skill)
 
-        //LEVEL AND STAT CALCULATION STUFF GOES HERE
+        //LEVEL AND STAT CALCULATION
         //ALSO AFFECTS DROPS
-        //starting_floor, stopping_floor,
-        //base_level, max_level,  level_up_factor,
-        this.level = expectedLevel//TODO
 
-        //TODO
+        if (!enemy.max_level)
+            enemy.max_level = 9999//quickfix
+        this.level = clamp(expectedLevel, enemy.base_level, enemy.max_level)
 
-        this.max_hp = enemy.hp
+        const level_difference = this.level - enemy.base_level
+        const level_up_modifier = 1.0 + (enemy.level_up_factor * level_difference)
+        console.log(level_up_modifier)//debug
+
+        this.max_hp = Math.round(enemy.hp * level_up_modifier)
         this.hp = this.max_hp
 
-        this.str = enemy.str
-        this.def = enemy.def
-        this.mag = enemy.mag
-        this.spd = enemy.spd
+        this.str = Math.round(enemy.str * level_up_modifier)
+        this.def = Math.round(enemy.def * level_up_modifier)
+        this.mag = Math.round(enemy.mag * level_up_modifier)
+        this.spd = Math.round(enemy.spd * level_up_modifier)
 
-        this.gold_dropped = enemy.gold_dropped
-        this.exp_dropped = enemy.exp_dropped
+        this.gold_dropped = Math.ceil(enemy.gold_dropped * level_up_modifier)
+        this.exp_dropped = Math.ceil(enemy.exp_dropped * level_up_modifier)
     }
 
     setFromPlayerData(player)

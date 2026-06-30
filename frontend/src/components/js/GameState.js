@@ -244,6 +244,11 @@ export default class GameState {
             console.log("[gamestate] Log function not set (str was " + str + ")")
     }
 
+    //attempt to prevent async-related disasters
+    setNoUpdate(bool){
+        this.no_update = bool
+    }
+
     async generateRandomItem()
     {
         let query_params = {}
@@ -553,7 +558,7 @@ export default class GameState {
                 
                 this.addToLog("You gained " + this.battle.enemy_battler.gold_dropped + " Gold!")
                 this.player.gold += this.battle.enemy_battler.gold_dropped
-                
+
                 //this.addToLog("Gained " + this.battle.enemy_battler.exp_dropped + " EXP!")
                 this.player.gainEXP(this.battle.enemy_battler.exp_dropped)
 
