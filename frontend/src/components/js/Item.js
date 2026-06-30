@@ -6,14 +6,14 @@ export default class Item {
     constructor() { // "empty" item
 
         this.id = 0
-        this.handle = "" //possibly redundant
+        this.handle = ""
 
         this.item_name = ""
         this.item_description = ""
 
         this.gold_value = 0
         this.rarity = ""
-        this.equipment = false //possibly redundant
+        this.equipment = false
         this.effect = null
 
         // equipment-specific attributes

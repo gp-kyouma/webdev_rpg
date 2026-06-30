@@ -408,15 +408,18 @@ export default class Battle {
         if (item.effect)
             Object.keys(item.effect).forEach(effect => {
                 const value = item.effect[effect]
+                let temp
                 switch (effect) {
                     case "hp_restore_percent":
-                        this.player_battler.ChangeHP(Math.ceil(this.player_battler.max_hp * (value / 100)))
-                        this.addToLog("Recovered " + Math.ceil(this.player_battler.max_hp * (value / 100)) + " HP!")
+                        temp = Math.ceil(this.player_battler.max_hp * (value / 100))
+                        this.player_battler.ChangeHP(temp)
+                        this.addToLog("Recovered " + temp + " HP!")
                         break;
 
                     case "mp_restore_percent":
-                        this.player_battler.ChangeMP(Math.ceil(this.player_battler.max_mp * (value / 100)))
-                        this.addToLog("Recovered " + Math.ceil(this.player_battler.max_mp * (value / 100)) + " MP!")
+                        temp = Math.ceil(this.player_battler.max_mp * (value / 100))
+                        this.player_battler.ChangeMP(temp)
+                        this.addToLog("Recovered " + temp + " MP!")
                         break;
 
                     case "deal_damage":

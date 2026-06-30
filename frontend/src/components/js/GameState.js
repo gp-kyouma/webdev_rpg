@@ -565,12 +565,21 @@ export default class GameState {
     }
 
     sellItem(index){
-        //TODO
+        const item = this.player.items[index]
+
+        this.player.gold += item.sell_value
+
+        this.player.items = this.player.items.toSpliced(index, 1)//removes item from inventory
+
+        this.addToLog(item.item_name + " sold!")
     }
 
     openChest()
     {
         //TODO
+        //if mimic start encounter
+        //but when do you get the item...? hmm.
+        //perhaps some new flags are in order
     }
 
     async fightBoss()
@@ -593,7 +602,7 @@ export default class GameState {
 
         this.battle.doPlayerAction(action_name, used_item)
         if (item_was_used)
-            this.player.items = this.player.items.toSpliced(action.item_index, 1)//removes item from inventory, hopefully this just works
+            this.player.items = this.player.items.toSpliced(action.item_index, 1)//removes item from inventory
 
         //if battle ongoing, do enemy action
         if (this.battle.battle_state == Battle.BATTLE_ONGOING){
