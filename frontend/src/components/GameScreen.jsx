@@ -88,12 +88,12 @@ export default function GameScreen({data, setData, quit}) {
     if (!data.battle)
         switch (data.currentTile) {
             case TileTypes.TREASURE:
-                currentTileScreen = null
+                currentTileScreen = <p>TODO TREASURE</p>
                 //todo treasure screen
                 break;
 
             case TileTypes.SHOP:
-                currentTileScreen = <p>lamp oil rope bombs you want it (placeholder)</p>
+                currentTileScreen = <p>TODO SHOP</p>
                 //todo shop screen
                 break;
 

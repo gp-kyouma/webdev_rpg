@@ -411,19 +411,19 @@ INSERT INTO Skills
 
 
 
-('SKILL_FIRE','Fire', "A basic fireball attack. [1.5x base magical damage]",  15,
+('SKILL_FIRE','Fire', "A basic fireball attack. [1.5x base magical damage]",  25,
 '{"magic": true, "offense_modifier": 1.5, "attacks": 1}'),
 
-('SKILL_BLAZE','Blaze', "A stronger fireball variant. [2.5x base magical damage]",  30,
+('SKILL_BLAZE','Blaze', "A stronger fireball variant. [2.5x base magical damage]",  40,
 '{"magic": true, "offense_modifier": 2.5, "attacks": 1}'),
 
-('SKILL_DUAL_BOLT','Dual Bolt', "Strikes the enemy twice with lightning. [2.0x base magical damage, 2 hits]",  45,
+('SKILL_DUAL_BOLT','Dual Bolt', "Strikes the enemy twice with lightning. [2.0x base magical damage, 2 hits]",  60,
 '{"magic": true, "offense_modifier": 2.0, "attacks": 2}'),
 
-('SKILL_GRAVITY','Gravity', "Crush the enemy under their own weight. [3.5x base magical damage, adaptive damage]",  65,
+('SKILL_GRAVITY','Gravity', "Crush the enemy under their own weight. [3.5x base magical damage, adaptive damage]",  80,
 '{"magic": true, "adaptive": true, "offense_modifier": 3.5, "attacks": 1}'),
 
-('SKILL_STARSTORM','Starstorm', 'Shower the enemy with a barrage of star power. [3.0x base magical damage, 3 hits, adaptive damage]',  80,
+('SKILL_STARSTORM','Starstorm', 'Shower the enemy with a barrage of star power. [3.0x base magical damage, 3 hits, adaptive damage]',  100,
 '{"magic": true, "adaptive": true, "offense_modifier": 3.0, "attacks": 3}');
 
 --TODO more
@@ -443,7 +443,16 @@ item1, item2, item3, item4) VALUES
 'SKILL_PIERCE_ARMOR_1', 'SKILL_PIERCE_ARMOR_2', 'SKILL_PIERCE_ARMOR_3', 'SKILL_PIERCE_ARMOR_3', 'SKILL_PIERCE_ARMOR_4', 
 'SWORD',  'MEDIUM',   
 'WPN_BRONZE_SWORD', 'ARM_LEATHER_ARMOR', null,
+'ITEM_RED_POTION', null, null, null),
+
+('CLASS_MAGICIAN', 'Magician',  'A practicioner of magic, seeking to hone their skills. Uses high-damaging magical spells.',  
+297,  131, 12, 11, 21, 22,   
+46,   16,  1,  1,  3,  3,          
+'SKILL_FIRE', 'SKILL_BLAZE', 'SKILL_DUAL_BOLT', 'SKILL_GRAVITY', 'SKILL_STARSTORM', 
+'SWORD',  'MEDIUM',   
+'WPN_BRONZE_SWORD', 'ARM_LEATHER_ARMOR', null,
 'ITEM_RED_POTION', null, null, null);
+--TODO proper Magician equip
 
 --TODO other classes
 
@@ -481,6 +490,6 @@ INSERT INTO LoginUsers (username, user_password) VALUES
 
 -- Preset scores
 INSERT INTO Scores (user_id, gameover_time, char_name, floor, total_exp, final_level, total_value) VALUES
-(1, CURRENT_TIMESTAMP, 'Jim John', 6, 530, 5, 5000),
-(1, CURRENT_TIMESTAMP, 'Mage #64.5', 5, 251, 2, 10000),
-(2, CURRENT_TIMESTAMP, 'Broke Guy', 7, 310, 3, 250);
+(1, CURRENT_TIMESTAMP, 'Jim John', 6, 160, 5, 5000),
+(1, CURRENT_TIMESTAMP, 'Stacks', 5, 40, 2, 10000),
+(2, CURRENT_TIMESTAMP, 'Sus', 7, 61, 3, 250);

@@ -10,7 +10,7 @@ export default class GameState {
     constructor() { // "empty" state
 
         this.game_over = false
-        this.no_update = false//i don't think this works as intended actually. thanks async very cool.
+        this.no_update = false
         
         this.id = 0
         this.user_id = 0
@@ -339,7 +339,7 @@ export default class GameState {
         this.is_mimic = mimic_roll < mimic_chance
     }
 
-    async generateNewFloor()//sadly this has to be async. tragic. top 10 saddest javascript moments.
+    async generateNewFloor()//sadly this has to be async now. tragic. top 10 saddest javascript moments.
     {
         this.no_update = true
 
@@ -379,16 +379,18 @@ export default class GameState {
     
     async startBattleEncounter(id, boss)
     {
-        this.battle = new Battle
-        this.battle.log_ = this.log_
+        let battle = new Battle
+        battle.log_ = this.log_
 
         const enemy_level = boss ? this.boss_level : this.floor
 
-        this.battle.player_battler.setFromPlayerData(this.player)
+        battle.player_battler.setFromPlayerData(this.player)
 
-        await this.battle.enemy_battler.setFromEnemyDataDB(id,boss,enemy_level)
+        await battle.enemy_battler.setFromEnemyDataDB(id,boss,enemy_level)
 
-        this.addToLog("A level " + this.battle.enemy_battler.level + " " + this.battle.enemy_battler.name + " draws near!")
+        this.battle = battle//clone?
+
+        this.addToLog("A level " + battle.enemy_battler.level + " " + battle.enemy_battler.name + " draws near!")
         this.addToLog("=== PLAYER TURN ===")
     }
 
@@ -578,8 +580,6 @@ export default class GameState {
     {
         //TODO
         //if mimic start encounter
-        //but when do you get the item...? hmm.
-        //perhaps some new flags are in order
     }
 
     async fightBoss()
@@ -626,7 +626,6 @@ export default class GameState {
                 this.addToLog("You gained " + this.battle.enemy_battler.gold_dropped + " Gold!")
                 this.player.gold += this.battle.enemy_battler.gold_dropped
 
-                //this.addToLog("Gained " + this.battle.enemy_battler.exp_dropped + " EXP!")
                 this.player.gainEXP(this.battle.enemy_battler.exp_dropped)
 
                 //if was boss, set defeated flag
